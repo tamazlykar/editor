@@ -1,6 +1,5 @@
 import {Line} from "../elements";
-import {Color, StrokeDasharray} from "../types";
-import {ElementVisitor} from "../element-visitor";
+import {Color, StrokeDasharray, LineEnd, LineEndPosition} from "../types";
 import {RaphaelElements} from "./RaphaelElements";
 
 export class RaphaelLine extends Line implements RaphaelElements {
@@ -83,26 +82,28 @@ export class RaphaelLine extends Line implements RaphaelElements {
     this.element.attr('stroke-dasharray', type);
   }
 
-  public accept(visitor: ElementVisitor) {
-    visitor.visitLine(this);
+  public lineEnd(type: LineEnd, position: LineEndPosition) {
+    // TODO: Line End
   }
 
-  public moveTo(x: number, y: number) {
-    this.element.attr({
-      'x': x,
-      'y': y
-    });
+  public moveTo(x: number, y: number, x2?: number, y2?: number) {
+    const path = this.constructPath(x, y, x2, y2);
+    this.element.attr('path', path);
   }
 
   public data(key: string, value?: any) {
     if (value) {
       this.element.data(key, value);
     } else {
-      return this.element.data(key);
+      let data = this.element.data(key);
+      return data;
     }
   }
 
-  public drag(onmove, onstart, onend) {
+  public drag(onmove: (dx: number, dy: number, x: number, y: number, event: DragEvent) =>{ },
+              onstart: (x: number, y: number, event: DragEvent) =>{ },
+              onend: (DragEvent: any) =>{ })
+  {
     this.element.drag(onmove, onstart, onend);
   }
 

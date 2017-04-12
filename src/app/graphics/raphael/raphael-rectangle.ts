@@ -1,6 +1,5 @@
 import {Color} from "../types";
 import {Rectangle} from "../elements";
-import {ElementVisitor} from "../element-visitor";
 import {RaphaelElements} from "./RaphaelElements";
 
 export class RaphaelRectangle extends Rectangle implements RaphaelElements {
@@ -16,7 +15,7 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
 
   constructor(paper: RaphaelPaper, x: number, y: number, width: number, height: number) {
     super();
-    this.element = paper.rect(x, y, width, height);
+    this.element = paper.rect(x, y, width, height).attr('fill', 'white');
   }
 
   get x(): number {
@@ -75,10 +74,6 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
     this.element.attr('fill', color);
   }
 
-  public accept(visitor: ElementVisitor) {
-    visitor.visitRectangle(this);
-  }
-
   public moveTo(x: number, y: number) {
     this.element.attr({
       'x': x,
@@ -94,7 +89,10 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
     }
   }
 
-  public drag(onmove, onstart, onend) {
+  public drag(onmove: (dx: number, dy: number, x: number, y: number, event: DragEvent) =>{ },
+              onstart: (x: number, y: number, event: DragEvent) =>{ },
+              onend: (DragEvent: any) =>{ })
+  {
     this.element.drag(onmove, onstart, onend);
   }
 }

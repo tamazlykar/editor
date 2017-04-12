@@ -1,7 +1,7 @@
 import {TextAnchor, TextDecoration, FontFamily, Color, FontStyle, FontWeight} from '../types';
 import {Text} from "../elements";
-import {ElementVisitor} from "../element-visitor";
 import {RaphaelElements} from "./RaphaelElements";
+import {element} from "protractor";
 
 export class RaphaelText extends Text implements RaphaelElements {
   private element: RaphaelElement;
@@ -105,10 +105,6 @@ export class RaphaelText extends Text implements RaphaelElements {
     this.element.attr('font-weight', weight);
   }
 
-  public accept(visitor: ElementVisitor) {
-    visitor.visitText(this);
-  }
-
   // Raphael specific functions
 
   public moveTo(x: number, y: number) {
@@ -126,7 +122,10 @@ export class RaphaelText extends Text implements RaphaelElements {
     }
   }
 
-  public drag(onmove, onstart, onend) {
+  public drag(onmove: (dx: number, dy: number, x: number, y: number, event: DragEvent) =>{ },
+              onstart: (x: number, y: number, event: DragEvent) =>{ },
+              onend: (DragEvent: any) =>{ })
+  {
     this.element.drag(onmove, onstart, onend);
   }
 }

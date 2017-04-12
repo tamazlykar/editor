@@ -5,14 +5,11 @@ import {
   FontFamily,
   FontWeight,
   Color,
-  StrokeDasharray, Params
-} from "./types";
-import {ElementVisitor} from "./element-visitor";
+  StrokeDasharray, Params, LineEndPosition, LineEnd
+} from './types';
 
 export abstract class Element {
-  abstract accept(visitor: ElementVisitor, params: Params);
 }
-
 
 export abstract class Text extends Element {
   abstract x: number;
@@ -45,4 +42,6 @@ export abstract class Line extends Element {
   abstract stroke: Color;
   abstract strokeWidth: number;
   abstract strokeDasharray: StrokeDasharray
+
+  abstract lineEnd(type: LineEnd, position: LineEndPosition);
 }

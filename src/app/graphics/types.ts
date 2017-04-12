@@ -55,3 +55,12 @@ export type StrokeDasharray = '' | '-' | '.' | '-.' | '-..' | '. ' | '- ' | '--'
 export interface Params {
   [propName: string]: any;
 }
+
+export type LineEnd = '';
+
+export type LineEndPosition = 'start' | 'end';
+
+export const LineEndPosition = {
+  start: 'start' as LineEndPosition,
+  end: 'end' as LineEndPosition
+};
