@@ -1,4 +1,4 @@
-export class Diagram {
+export interface Diagram {
   $key?: string;
-  private name: string;
+  name: string;
 }
