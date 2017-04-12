@@ -24,6 +24,7 @@ import { InstrumentalPanelComponent } from './shared/components/instrumental-pan
 
 import { AuthService, FirebaseAuthService } from './shared/services/auth';
 import { ProjectService, FirebaseProjectService } from './shared/services/project';
+import { DiagramService, FirebaseDiagramService } from './shared/services/diagram';
 
 
 const firebaseConfig = {
@@ -64,7 +65,8 @@ const firebaseAuthConfig = {
     FirebaseService,
     FirebaseProjectService,
     { provide: AuthService, useClass: FirebaseAuthService },
-    { provide: ProjectService, useClass: FirebaseProjectService  }
+    { provide: ProjectService, useClass: FirebaseProjectService },
+    { provide: DiagramService, useClass: FirebaseDiagramService }
   ],
   bootstrap: [AppComponent]
 })
