@@ -1,4 +1,10 @@
 :host {
+  width: 320px;
   display: flex;
   flex-direction: column;
+  background-color: white;
+
+  -webkit-box-shadow: -1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    -1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         -1px 0px 10px 0px rgba(50, 50, 50, 0.75);
 }

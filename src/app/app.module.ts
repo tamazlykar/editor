@@ -9,6 +9,7 @@ import 'hammerjs';
 import { StoreModule } from '@ngrx/store';
 import { appReducer } from './shared/reducers';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
+import { SidebarModule } from './shared/components/sidebar';
 
 import { FirebaseService } from './shared/db.service';
 
@@ -17,9 +18,6 @@ import { DevelopViewComponent } from './develop-view/develop-view.component';
 
 import { ToolbarComponent } from './shared/components/toolbar';
 import { SidenavComponent } from './shared/components/sidenav';
-import { SidebarComponent } from './shared/components/sidebar';
-import { ElementExplorerComponent } from './shared/components/sidebar/element-explorer';
-import { ProjectExplorerComponent } from './shared/components/sidebar/project-explorer';
 import { InstrumentalPanelComponent } from './shared/components/instrumental-panel';
 
 import { AuthService, FirebaseAuthService } from './shared/services/auth';
@@ -47,9 +45,6 @@ const firebaseAuthConfig = {
     DevelopViewComponent,
     ToolbarComponent,
     SidenavComponent,
-    SidebarComponent,
-    ElementExplorerComponent,
-    ProjectExplorerComponent,
     InstrumentalPanelComponent
   ],
   imports: [
@@ -58,6 +53,7 @@ const firebaseAuthConfig = {
     HttpModule,
     AppRoutingModule,
     MaterialModule,
+    SidebarModule,
     StoreModule.provideStore(appReducer),
     AngularFireModule.initializeApp(firebaseConfig, firebaseAuthConfig)
   ],

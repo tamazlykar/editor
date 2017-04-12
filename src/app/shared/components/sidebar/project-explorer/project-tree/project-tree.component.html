@@ -1,0 +1,12 @@
+<div class="wrapper">
+  <div class="project-name">{{ (project | async)?.name }}</div>
+  <div class="diagram-list">
+    <div
+      *ngFor="let diagram of diagrams | async"
+      class="diagram-element"
+      (dblclick)="onDiagramSelect(diagram)"
+    >
+      {{ diagram.name }}
+    </div>
+  </div>
+</div>

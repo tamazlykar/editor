@@ -1,0 +1,19 @@
+.wrapper {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.project-name {
+  font-size: 24px;
+}
+
+.diagram-list {
+  padding-left: 30px;
+}
+
+.diagram-element {
+  padding-top: 10px;
+  font-size: 18px;
+}
