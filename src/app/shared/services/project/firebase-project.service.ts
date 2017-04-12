@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { ProjectService } from './project.service';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Store } from '@ngrx/store';
 import { State } from '../../reducers';
 import { Observable } from 'rxjs/Observable';
@@ -9,17 +9,12 @@ import { Project } from '../../interfaces';
 
 @Injectable()
 export class FirebaseProjectService extends ProjectService {
-  public projects: Observable<Project[]>;
-  protected _projects: BehaviorSubject<Project[]>;
-  protected dataStore: { projects: Project[] };
-  protected url: string;
-  protected userId: string;
   private firebaseRef: FirebaseListObservable<Project[]>;
 
   constructor(private af: AngularFire, store: Store<State>) {
     super(store);
 
-    this.url = '/projects/';
+    this.url = '/projects';
     this.dataStore = { projects: [] };
     this._projects = new BehaviorSubject<Project[]>([]);
     this.projects = this._projects.asObservable();
@@ -50,10 +45,10 @@ export class FirebaseProjectService extends ProjectService {
   }
 
 
-  public load(): void {}
+  public load() {}
 
-  protected initialize() {
-    this.firebaseRef = this.af.database.list(`/projects/${this.userId}`);
+  protected initialize(userId: string) {
+    this.firebaseRef = this.af.database.list(`${this.url}/${userId}`);
     this.firebaseRef.subscribe((projects: Project[]) => {
       this.dataStore.projects = projects;
       this._projects.next(Object.assign({}, this.dataStore).projects);

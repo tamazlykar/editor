@@ -10,17 +10,14 @@ export abstract class ProjectService {
   protected _projects: BehaviorSubject<Project[]>;
   protected dataStore: { projects: Project[] };
   protected url: string;
-  protected userId: string;
 
   constructor(protected store: Store<State>) {
     this.store.select(getUserId)
-      .subscribe((value: string) => {
-        if (!value) {
+      .subscribe((userId: string) => {
+        if (!userId) {
           return;
         }
-
-        this.userId = value;
-        this.initialize();
+        this.initialize(userId);
       });
   }
 
@@ -33,7 +30,7 @@ export abstract class ProjectService {
     this.store.dispatch(new app.SetProjectAction(projectId));
   }
 
-  protected abstract initialize();
+  protected abstract initialize(userId: string): void;
 }
 
 
