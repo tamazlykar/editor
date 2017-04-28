@@ -1,6 +1,6 @@
-import {Line} from "../elements";
-import {Color, StrokeDasharray, LineEnd, LineEndPosition} from "../types";
-import {RaphaelElements} from "./RaphaelElements";
+import { Line } from '../elements';
+import { Color, StrokeDasharray, LineEnd, LineEndPosition, BoundingBox } from '../types';
+import { RaphaelElements } from './RaphaelElements';
 
 export class RaphaelLine extends Line implements RaphaelElements {
   private element: RaphaelElement;
@@ -122,5 +122,21 @@ export class RaphaelLine extends Line implements RaphaelElements {
       x2: path[1][1],
       y2: path[1][2]
     };
+  }
+
+  public show() {
+    this.element.show();
+  }
+
+  public hide() {
+    this.element.hide();
+  }
+
+  public getBBox(): BoundingBox {
+    return this.element.getBBox();
+  }
+
+  public remove() {
+    this.element.remove();
   }
 }

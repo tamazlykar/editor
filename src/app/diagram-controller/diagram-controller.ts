@@ -19,14 +19,14 @@ export class DiagramController {
       case 'Class':
         this.drawClass(element as Class);
         break;
-      case 'Dependency':
+      case 'DependencyModel':
         this.drawDependency();
         break;
       case 'Association':
         this.drawAssociation();
         break;
       default:
-        console.log('Error: DiagramController module. Element unknown type');
+        console.log('Error: DiagramController module. ElementModel unknown type');
         break;
     }
   }
@@ -41,7 +41,7 @@ export class DiagramController {
     classSet.draggable();
     classSet.updated$.subscribe(val => console.log('Moving'));
 
-    // store.dispath({type: 'Update View Class', payload: {x: newx, y: newy}}
+    // store.dispath({type: 'Update View ClassModel', payload: {x: newx, y: newy}}
   }
 
   private drawDependency() {

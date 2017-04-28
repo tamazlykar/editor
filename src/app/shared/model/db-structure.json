@@ -1,0 +1,38 @@
+{
+  "projects": {
+    "project_id1": {
+      "name": "name"
+    },
+    "ProjectName2": true
+  },
+  "diagrams": {
+    "project_id": {
+      "DiagramName1": true,
+      "DiagramName2": true
+    }
+  },
+  "model-elements": {
+    "ProjectName1": {
+      "classes": {
+        "uniqueClassName1": {},
+        "uniqueClassName2": {}
+      },
+      "interfaces": {},
+      "association": {},
+      "dependency": {}
+    },
+    "ProjectName2": {}
+  },
+  "view-elements": {
+    "ProjectName1": {
+      "DiagramName1": {
+        "classes": {},
+        "interfaces": {},
+        "association": {},
+        "dependency": {}
+      },
+      "DiagramName2": {}
+    },
+    "ProjectName2": {}
+  }
+}

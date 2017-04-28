@@ -1,8 +1,8 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { DiagramController } from '../diagram-controller/diagram-controller';
 import { Graphics } from '../graphics/graphics';
-import { Class as PMClass } from '../model/presentation-model/classifier/class';
-import { ProjectService, AuthService } from '../shared/services';
+import { DiagramService, AuthService } from '../shared/services';
+import { Diagram } from '../shared/interfaces';
 
 
 @Component({
@@ -13,15 +13,12 @@ import { ProjectService, AuthService } from '../shared/services';
 export class DevelopViewComponent implements AfterViewInit {
   private g: Graphics;
 
-  constructor(private authService: AuthService, private projectService: ProjectService) {
+  constructor(private authService: AuthService, private diagramService: DiagramService) {
     this.test();
   }
 
   public test() {
-    this.authService.login('tadani7@gmail.com', '07021995');
-    this.projectService.projects.subscribe(val => console.log(val));
   }
-
 
   public ngAfterViewInit(): void {
     const element = document.getElementById('canvas');
@@ -52,8 +49,5 @@ export class DevelopViewComponent implements AfterViewInit {
     // let set3 = this.g.set();
     // set3.add(line);
     // set3.draggable(true);
-
-    const pmClass = new PMClass();
-    const dc = new DiagramController([pmClass]);
   }
 }

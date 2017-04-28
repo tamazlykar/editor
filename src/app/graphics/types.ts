@@ -64,3 +64,12 @@ export const LineEndPosition = {
   start: 'start' as LineEndPosition,
   end: 'end' as LineEndPosition
 };
+
+export interface BoundingBox {
+  x: number;
+  y: number;
+  x2: number;
+  y2: number;
+  width: number;
+  height: number;
+}

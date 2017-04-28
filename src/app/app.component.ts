@@ -16,6 +16,9 @@ import * as app from './shared/actions/app-state';
 
 import { AuthService, ProjectService } from './shared/services';
 
+import { ClassModel } from './shared/model2/object-model/class';
+import { AttributeModel } from './shared/model2/object-model/attribute';
+
 @Component({
   selector: 'uml-root',
   templateUrl: './app.component.html',
@@ -39,6 +42,16 @@ export class AppComponent implements OnInit {
       console.log('App: projects', projects);
       const projectId = projects[0].$key;
       this.projectService.set(projectId);
+    });
+
+    this.store.select(getDiagramId).subscribe( value => {
+      if (!value) {
+        return;
+      }
+
+      console.log('diagram', value);
+
+
     });
   }
 

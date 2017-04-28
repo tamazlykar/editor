@@ -24,6 +24,9 @@ import { AuthService, FirebaseAuthService } from './shared/services/auth';
 import { ProjectService, FirebaseProjectService } from './shared/services/project';
 import { DiagramService, FirebaseDiagramService } from './shared/services/diagram';
 
+import { SvgMainComponent } from './test-svg/svg-main.component';
+import { InnerSvgComponent } from './test-svg/inner-svg.component';
+
 
 const firebaseConfig = {
     apiKey: 'AIzaSyCIp2-7wO-aD2Y2eoD0_z6GC4qnXGGrEgM',
@@ -45,7 +48,9 @@ const firebaseAuthConfig = {
     DevelopViewComponent,
     ToolbarComponent,
     SidenavComponent,
-    InstrumentalPanelComponent
+    InstrumentalPanelComponent,
+    SvgMainComponent,
+    InnerSvgComponent
   ],
   imports: [
     BrowserModule,

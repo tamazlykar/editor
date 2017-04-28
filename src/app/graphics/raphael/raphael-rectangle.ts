@@ -1,6 +1,6 @@
-import {Color} from "../types";
-import {Rectangle} from "../elements";
-import {RaphaelElements} from "./RaphaelElements";
+import { Color, BoundingBox } from '../types';
+import { Rectangle } from '../elements';
+import { RaphaelElements } from './RaphaelElements';
 
 export class RaphaelRectangle extends Rectangle implements RaphaelElements {
   private element: RaphaelElement;
@@ -94,5 +94,21 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
               onend: (DragEvent: any) =>{ })
   {
     this.element.drag(onmove, onstart, onend);
+  }
+
+  public show() {
+    this.element.show();
+  }
+
+  public hide() {
+    this.element.hide();
+  }
+
+  public getBBox(): BoundingBox {
+    return this.element.getBBox();
+  }
+
+  public remove() {
+    this.element.remove();
   }
 }

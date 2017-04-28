@@ -1,23 +1,21 @@
 import { VisibilityKind, AggregationKind } from './types';
 
 export interface IElement {
-  comment: Array<IComment>;
+  commentKeys: Array<string>;
 }
 
 interface INamedElement extends IElement {
   name: string;
   visibility: VisibilityKind;
-  supplierDependencies: Array<IDependency>;
-  clientDependencies: Array<IDependency>;
 }
 
-interface IComment {
+export interface IComment {
   body: string;
-  annotatedElements: Array<IElement>;
+  annotatedElementsKeys: Array<string>;
 }
 
 interface ITypedElement extends INamedElement {
-  type: IClassifier;
+  typeKey: string;
 }
 
 interface IRedifinableElement extends INamedElement {
@@ -30,6 +28,8 @@ export interface IParameter extends ITypedElement {
 
 export interface IClassifier extends INamedElement {
   isAbstract: boolean;
+  supplierDependenciesKeys: Array<string>;
+  clientDependenciesKeys: Array<string>;
 }
 
 export interface IClass extends IClassifier {
@@ -74,8 +74,8 @@ interface IDirectedRelationship extends IRelationship {
 }
 
 export interface IDependency extends IDirectedRelationship {
-  supplier: INamedElement;
-  client: INamedElement;
+  supplierKey: string;
+  clientKey: string;
 }
 
 export interface IRealization extends IDependency {

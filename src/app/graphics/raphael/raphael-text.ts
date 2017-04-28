@@ -1,7 +1,6 @@
-import {TextAnchor, TextDecoration, FontFamily, Color, FontStyle, FontWeight} from '../types';
-import {Text} from "../elements";
-import {RaphaelElements} from "./RaphaelElements";
-import {element} from "protractor";
+import { TextAnchor, TextDecoration, FontFamily, Color, FontStyle, FontWeight, BoundingBox } from '../types';
+import { Text } from '../elements';
+import { RaphaelElements } from './RaphaelElements';
 
 export class RaphaelText extends Text implements RaphaelElements {
   private element: RaphaelElement;
@@ -127,5 +126,21 @@ export class RaphaelText extends Text implements RaphaelElements {
               onend: (DragEvent: any) =>{ })
   {
     this.element.drag(onmove, onstart, onend);
+  }
+
+  public show() {
+    this.element.show();
+  }
+
+  public hide() {
+    this.element.hide();
+  }
+
+  public getBBox(): BoundingBox {
+    return this.element.getBBox();
+  }
+
+  public remove() {
+    this.element.remove();
   }
 }
