@@ -143,4 +143,8 @@ export class RaphaelText extends Text implements RaphaelElements {
   public remove() {
     this.element.remove();
   }
+
+  public mousedown(handler: Function) {
+    this.element.mousedown(handler);
+  }
 }

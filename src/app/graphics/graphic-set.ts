@@ -1,12 +1,13 @@
-import {Element, Text} from './elements';
-import {RaphaelText} from './raphael/raphael-text';
+import { Element, Text } from './elements';
+import { RaphaelText } from './raphael/raphael-text';
 import { Subject } from 'rxjs/Subject';
+import { UpdateInfo } from './types';
 
 export abstract class GraphicSet {
   protected elements: Array<Element>;
-  protected updatedSource$ = new Subject<boolean>();
+  protected updateSource$ = new Subject<UpdateInfo>();
 
-  public updated$ = this.updatedSource$.asObservable();
+  public updates$ = this.updateSource$.asObservable();
 
   public add(element: Element): void {
     this.elements.push(element);
@@ -23,5 +24,7 @@ export abstract class GraphicSet {
   }
 
   public abstract draggable(): void;
+
+  public abstract resizable(): void;
 }
 

@@ -1,10 +1,11 @@
-import {ElementFactory} from "../element-factory";
-import {RaphaelText} from "./raphael-text";
-import {Text, Rectangle, Line} from "../elements";
-import {RaphaelRectangle} from "./raphael-rectangle";
-import {RaphaelLine} from "./raphael-line";
-import {GraphicSet} from "../graphic-set";
-import {RaphaelSet} from "./raphael-set";
+import {ElementFactory} from '../element-factory';
+import {RaphaelText} from './raphael-text';
+import { Text, Rectangle, Line, Path } from '../elements';
+import {RaphaelRectangle} from './raphael-rectangle';
+import {RaphaelLine} from './raphael-line';
+import { RaphaelPath } from './raphael-path';
+import {GraphicSet} from '../graphic-set';
+import {GraphicRaphaelSet} from './raphael-set';
 
 
 export class RaphaelFactory extends ElementFactory {
@@ -26,7 +27,11 @@ export class RaphaelFactory extends ElementFactory {
     return new RaphaelLine(this.paper, x1, y1, x2, y2);
   }
 
+  public path(path: string): Path {
+    return new RaphaelPath(this.paper, path);
+  }
+
   public set(): GraphicSet {
-    return new RaphaelSet();
+    return new GraphicRaphaelSet(this.paper);
   }
 }

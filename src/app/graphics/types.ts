@@ -73,3 +73,10 @@ export interface BoundingBox {
   width: number;
   height: number;
 }
+
+export interface UpdateInfo {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}

@@ -4,36 +4,69 @@ import {Text, Line} from "../elements";
 import {RaphaelText} from "./raphael-text";
 import {RaphaelRectangle} from "./raphael-rectangle";
 import {RaphaelLine} from "./raphael-line";
+import { BoundingBox, UpdateInfo } from '../types';
+import { getEditElementCallback } from './callback/edit-element-callback';
+import { ResizableRect } from './callback/resizable-rect';
 
-export class RaphaelSet extends GraphicSet {
+export class GraphicRaphaelSet extends GraphicSet {
   protected dragstart: any;
   protected dragmove: any;
   protected dragend: any;
+  private paper: RaphaelPaper;
 
-  constructor() {
+  constructor(paper: RaphaelPaper) {
     super();
-    this.elements = new Array<Element>();
-    const updatedSource$ = this.updatedSource$;
+    this.elements = new Array<RaphaelElements>();
+    this.paper = paper;
+    const updateSource$ = this.updateSource$;
 
     this.dragstart = function(x: number, y: number, e: DragEvent): {} {
-      this.attr('fill', 'orange');
-      let set = this.data('set') as RaphaelSet;
-      set.setStartCoords();
-
-      console.log(set);
+      if (!e.isTrusted) {
+        // for resmove Resizable Rect
+        // removing frag event
+        const event = new Event('mouseup', {bubbles: false, cancelable: true});
+        this.node.dispatchEvent(event);
+        return {};
+      }
+      const set = this.data('set') as GraphicRaphaelSet;
+      const bBox = set.getBBox();
+      const rect = paper.rect(bBox.x, bBox.y, bBox.width, bBox.height).attr('stroke', 'blue').translate(0.5, 0.5);
+      this.data('dragRect', rect);
+      this.data('drag-start-x', bBox.x);
+      this.data('drag-start-y', bBox.y);
 
       return {};
     };
 
     this.dragmove = function(dx: number, dy: number, x: number, y: number, e: DragEvent): {} {
-      let set = this.data('set') as RaphaelSet;
-      set.move(dx, dy);
+      let set = this.data('set') as GraphicRaphaelSet;
+      const dragRect = this.data('dragRect');
+      dragRect.attr({
+        x: this.data('drag-start-x') + dx,
+        y: this.data('drag-start-y') + dy
+      });
+
       return {};
     };
 
     this.dragend = function(e): {} {
-      this.attr('fill', 'black');
-      updatedSource$.next(true);
+      // this.attr('fill', 'black');
+      const dragRect = this.data('dragRect');
+      // update stuff
+      updateSource$.next({
+        x: dragRect.attr('x'),
+        y: dragRect.attr('y'),
+        width: dragRect.attr('width'),
+        height: dragRect.attr('height')
+      });
+      this.removeData('dragRect');
+      dragRect.remove();
+
+      // for resmove Resizable Rect
+      const event = new Event('mousedown', {bubbles: false, cancelable: true});
+      this.node.dispatchEvent(event);
+
+
       return {};
     };
   }
@@ -45,6 +78,54 @@ export class RaphaelSet extends GraphicSet {
       el.data('set', this);
       el.drag(this.dragmove, this.dragstart, this.dragend);
     }
+  }
+
+  public resizable(): void {
+    let el: RaphaelElements;
+    for (const element of this.elements) {
+      el = element as RaphaelElements;
+      el.data('set', this);
+      el.mousedown(getEditElementCallback(this.paper, this.updateSource$));
+    }
+
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener('mousedown', () => {
+      ResizableRect.remove();
+    });
+  }
+
+  // private click() {
+  //   let el: RaphaelElements;
+  //   for (const element of this.elements) {
+  //     el = element as RaphaelElements;
+  //     el.onmousedown()
+  //   }
+  // }
+
+  public getBBox(): BoundingBox {
+    let setBBox: BoundingBox;
+
+    for (const element of this.elements) {
+      let box: BoundingBox = element.getBBox();
+      if (!setBBox) {
+        setBBox = Object.assign({}, box);
+        continue;
+      }
+      if (box.x < setBBox.x) {
+        setBBox.x = box.x;
+      }
+      if (box.y < setBBox.y) {
+        setBBox.y = box.y;
+      }
+      if (box.x2 > setBBox.x2) {
+        setBBox.x2 = box.x2;
+      }
+      if (box.y2 > setBBox.y2) {
+        setBBox.y2 = box.y2;
+      }
+    }
+
+    return setBBox;
   }
 
   private move(dx: number, dy: number) {

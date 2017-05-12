@@ -10,6 +10,10 @@ import {
 } from './types';
 
 export abstract class Element {
+  abstract hide();
+  abstract show();
+  abstract getBBox(): BoundingBox;
+  abstract remove();
 }
 
 export abstract class Text extends Element {
@@ -23,11 +27,6 @@ export abstract class Text extends Element {
   abstract fontFamily: FontFamily;
   abstract fontWeight: FontWeight;
   abstract fill: Color;
-
-  abstract hide();
-  abstract show();
-  abstract getBBox(): BoundingBox;
-  abstract remove();
 }
 
 export abstract class Rectangle extends Element {
@@ -38,11 +37,6 @@ export abstract class Rectangle extends Element {
   abstract stroke: Color;
   abstract strokeWidth: number;
   abstract fill: Color;
-
-  abstract hide();
-  abstract show();
-  abstract getBBox(): BoundingBox;
-  abstract remove();
 }
 
 export abstract class Line extends Element {
@@ -55,8 +49,12 @@ export abstract class Line extends Element {
   abstract strokeDasharray: StrokeDasharray
 
   abstract lineEnd(type: LineEnd, position: LineEndPosition);
-  abstract hide();
-  abstract show();
-  abstract getBBox(): BoundingBox;
-  abstract remove();
+}
+
+export abstract class Path extends Element {
+  abstract path: string;
+  abstract stroke: Color;
+  abstract strokeWidth: number;
+  abstract strokeDasharray: StrokeDasharray
+  abstract fill: Color;
 }
