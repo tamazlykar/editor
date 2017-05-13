@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { AngularFire } from 'angularfire2';
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
-import * as app from '../../actions/app-state';
+import { State } from '../../redux/reducers';
+import * as app from '../../redux/actions/app';
 
 @Injectable()
 export class FirebaseAuthService extends AuthService {

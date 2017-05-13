@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
+import { State } from '../../redux/reducers';
 
 export abstract class AuthService {
 

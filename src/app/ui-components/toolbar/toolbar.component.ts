@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
-import * as ui from '../../actions/ui-state';
+import { State } from '../../shared/redux/reducers';
+import * as ui from '../../shared/redux/actions/ui';
 
 @Component({
     selector: 'uml-toolbar',

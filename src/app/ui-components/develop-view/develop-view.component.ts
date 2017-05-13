@@ -1,13 +1,13 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { Graphics } from '../shared/graphics/graphics';
-import { DiagramController } from '../shared/diagram-controller';
-import { ObjectModelService, ViewModelService } from './.';
+import { Graphics } from '../../shared/graphics';
+import { DiagramController } from '../../shared/diagram-controller';
+import { ObjectModelService, ViewModelService } from '../../shared/services/model-services';
 
 
 @Component({
   selector: 'uml-develop-view',
-  templateUrl: './develop-view.component.html',
-  styleUrls: ['./develop-view.component.css']
+  templateUrl: 'develop-view.component.html',
+  styleUrls: ['develop-view.component.css']
 })
 export class DevelopViewComponent implements AfterViewInit {
   private g: Graphics;

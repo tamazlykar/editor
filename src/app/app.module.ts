@@ -7,25 +7,31 @@ import { AppRoutingModule } from './app-routing.module';
 import 'hammerjs';
 
 import { StoreModule } from '@ngrx/store';
-import { appReducer } from './shared/reducers';
+import { appReducer } from './shared/redux/reducers';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
-import { SidebarModule } from './shared/components/sidebar';
-
-import { FirebaseService } from './shared/db.service';
+import { SidebarModule } from './ui-components/sidebar';
 
 import { AppComponent } from './app.component';
-import { DevelopViewComponent } from './develop-view/develop-view.component';
+import { DevelopViewComponent } from './ui-components/develop-view/develop-view.component';
 
-import { ToolbarComponent } from './shared/components/toolbar';
-import { SidenavComponent } from './shared/components/sidenav';
-import { InstrumentalPanelComponent } from './shared/components/instrumental-panel';
+import { ToolbarComponent } from './ui-components/toolbar';
+import { SidenavComponent } from './ui-components/sidenav';
+import { InstrumentalPanelComponent } from './ui-components/instrumental-panel';
 
-import { AuthService, FirebaseAuthService } from './shared/services/auth';
-import { ProjectService, FirebaseProjectService } from './shared/services/project';
-import { DiagramService, FirebaseDiagramService } from './shared/services/diagram';
+import { AuthService, FirebaseAuthService } from './shared/services/auth-service';
 
-import { SvgMainComponent } from './test-svg/svg-main.component';
-import { InnerSvgComponent } from './test-svg/inner-svg.component';
+import {
+  ProjectDataService,
+  DiagramDataService,
+  ObjectModelDataService,
+  ViewModelDataService
+} from './shared/services/data-services';
+import {
+  ProjectService,
+  DiagramService,
+  ObjectModelService,
+  ViewModelService
+} from './shared/services/model-services';
 
 
 const firebaseConfig = {
@@ -48,9 +54,7 @@ const firebaseAuthConfig = {
     DevelopViewComponent,
     ToolbarComponent,
     SidenavComponent,
-    InstrumentalPanelComponent,
-    SvgMainComponent,
-    InnerSvgComponent
+    InstrumentalPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -63,11 +67,15 @@ const firebaseAuthConfig = {
     AngularFireModule.initializeApp(firebaseConfig, firebaseAuthConfig)
   ],
   providers: [
-    FirebaseService,
-    FirebaseProjectService,
-    { provide: AuthService, useClass: FirebaseAuthService },
-    { provide: ProjectService, useClass: FirebaseProjectService },
-    { provide: DiagramService, useClass: FirebaseDiagramService }
+    ProjectDataService,
+    DiagramDataService,
+    ObjectModelDataService,
+    ViewModelDataService,
+    ProjectService,
+    DiagramService,
+    ObjectModelService,
+    ViewModelService,
+    { provide: AuthService, useClass: FirebaseAuthService }
   ],
   bootstrap: [AppComponent]
 })

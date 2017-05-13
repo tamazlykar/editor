@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import {AppComponent} from './app.component';
-import {DevelopViewComponent} from './develop-view/develop-view.component';
+import {DevelopViewComponent} from './ui-components/develop-view/develop-view.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/develop', pathMatch: 'full' },

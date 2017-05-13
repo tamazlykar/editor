@@ -9,15 +9,12 @@ import {
   getProjectId,
   getDiagramId,
   getModelElementId,
-  getViewElementId
-} from './shared/reducers';
-import * as ui from './shared/actions/ui-state';
-import * as app from './shared/actions/app-state';
-
-import { AuthService, ProjectService } from './shared/services';
-
-import { ClassModel } from './shared/model2/object-model/class';
-import { AttributeModel } from './shared/model2/object-model/attribute';
+  getViewElementId,
+  getProjectListState
+} from './shared/redux/reducers';
+import * as ui from './shared/redux/actions/ui';
+import { AuthService } from './shared/services/auth-service';
+import { ProjectService, DiagramService } from './shared/services/model-services';
 
 @Component({
   selector: 'uml-root',
@@ -29,30 +26,14 @@ export class AppComponent implements OnInit {
   @ViewChild(MdSidenav)
   private mdSidenavComponent: MdSidenav;
 
-  constructor(private store: Store<State>, private authService: AuthService, private projectService: ProjectService) {
-    this.authService.login('tadani7@gmail.com', '07021995');
-
-    this.printAppStates();
-
-    // select 1 project in list
-    this.projectService.projects.subscribe((projects: any[]) => {
-      if (projects.length === 0) {
-        return;
-      }
-      console.log('App: projects', projects);
-      const projectId = projects[0].$key;
-      this.projectService.set(projectId);
-    });
-
-    this.store.select(getDiagramId).subscribe( value => {
-      if (!value) {
-        return;
-      }
-
-      console.log('diagram', value);
-
-
-    });
+  constructor(
+    private store: Store<State>,
+    private authService: AuthService,
+    private projectService: ProjectService,
+    private diagramService: DiagramService
+  ) {
+    this.autoselect();
+    this.printStore();
   }
 
   public ngOnInit() {
@@ -75,6 +56,45 @@ export class AppComponent implements OnInit {
   }
 
 
+
+
+  public printStore() {
+    this.store.subscribe(a => {console.log('Store:', a)});
+  }
+
+  public autoselect() {
+    this.autentification();
+    this.selectProject();
+    this.selectDiagram();
+  }
+
+  public autentification() {
+    this.authService.login('tadani7@gmail.com', '07021995');
+  }
+
+  public selectProject() {
+    // select 1 project in list
+    this.projectService.projects$.subscribe((projects: any[]) => {
+      if (projects.length === 0) {
+        return;
+      }
+      const projectId = projects[0].$key;
+      this.projectService.setCurrent(projectId);
+    });
+    this.projectService.currentProject$.subscribe(p => console.log('CurrentProject:', p));
+  }
+
+  public selectDiagram() {
+    this.diagramService.diagrams$.subscribe((diagrams: any[]) => {
+      if (diagrams.length === 0) {
+        return;
+      }
+      const diagramId = diagrams[0].$key;
+      this.diagramService.setCurrent(diagramId);
+    });
+    this.diagramService.currentDiagram$.subscribe(d => console.log('CurrentDiagram:', d));
+
+  }
 
   public printAppStates() {
     this.store.select(getUserId).subscribe(val => console.log('Store: userId', val));
