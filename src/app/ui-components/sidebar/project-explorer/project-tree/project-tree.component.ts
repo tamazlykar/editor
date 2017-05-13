@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService, DiagramService } from '../../../../services';
+import { ProjectService, DiagramService } from '../../../../';
 import { Observable } from 'rxjs/Observable';
 import { Project, Diagram } from '../../../../interfaces';
 
 @Component({
   selector: 'uml-project-tree',
-  templateUrl: './project-tree.component.html',
-  styleUrls: ['./project-tree.component.css']
+  templateUrl: 'project-tree.component.html',
+  styleUrls: ['project-tree.component.css']
 })
 export class ProjectTreeComponent implements OnInit {
   private project: Observable<Project>;

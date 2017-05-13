@@ -1,8 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { DiagramController } from '../diagram-controller/diagram-controller';
-import { Graphics } from '../graphics/graphics';
-import { DiagramService, AuthService } from '../shared/services';
-import { Diagram } from '../shared/interfaces';
+import { Graphics } from '../shared/graphics/graphics';
+import { DiagramController } from '../shared/diagram-controller';
+import { ObjectModelService, ViewModelService } from './.';
 
 
 @Component({
@@ -12,8 +11,12 @@ import { Diagram } from '../shared/interfaces';
 })
 export class DevelopViewComponent implements AfterViewInit {
   private g: Graphics;
+  private diagramController: DiagramController;
 
-  constructor(private authService: AuthService, private diagramService: DiagramService) {
+  constructor(
+    private modelService: ObjectModelService,
+    private viewService: ViewModelService
+  ) {
     this.test();
   }
 
@@ -22,8 +25,10 @@ export class DevelopViewComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     const element = document.getElementById('canvas');
-    this.g = new Graphics(element, 800, 600);
-    this.testing();
+    this.diagramController = new DiagramController(this.modelService, this.viewService);
+    this.diagramController.initialize(element);
+    // this.g = new Graphics(element, 800, 600);
+    // this.testing();
   }
 
   private testing() {
@@ -45,7 +50,7 @@ export class DevelopViewComponent implements AfterViewInit {
     set2.add(line);
     set2.draggable();
 
-    //let line = this.g.line(600, 200, 800, 200);
+    // let line = this.g.line(600, 200, 800, 200);
     // let set3 = this.g.set();
     // set3.add(line);
     // set3.draggable(true);
