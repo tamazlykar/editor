@@ -1,4 +1,4 @@
-import { Graphics } from '../../../graphics';
+import { Graphics } from '../../../../graphics';
 
 export class OperationCompartment {
   private graphics: Graphics;

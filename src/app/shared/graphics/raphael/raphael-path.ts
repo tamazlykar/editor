@@ -64,7 +64,7 @@ export class RaphaelPath extends Path implements RaphaelElements {
     this.element.attr('path', path);
   }
 
-  public data(key: string, value?: any) {
+  public data(key: string, value?: any): any {
     if (value) {
       this.element.data(key, value);
     } else {

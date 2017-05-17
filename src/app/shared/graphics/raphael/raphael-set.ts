@@ -1,6 +1,6 @@
 import {GraphicSet} from "../graphic-set";
 import {RaphaelElements} from "./RaphaelElements";
-import {Text, Line} from "../elements";
+import {Text, Line, Element} from "../elements";
 import {RaphaelText} from "./raphael-text";
 import {RaphaelRectangle} from "./raphael-rectangle";
 import {RaphaelLine} from "./raphael-line";
@@ -46,25 +46,31 @@ export class GraphicRaphaelSet extends GraphicSet {
         y: this.data('drag-start-y') + dy
       });
 
+      this.data('moveFlag', true);
+
       return {};
     };
 
     this.dragend = function(e): {} {
       // this.attr('fill', 'black');
       const dragRect = this.data('dragRect');
-      // update stuff
-      updateSource$.next({
-        x: dragRect.attr('x'),
-        y: dragRect.attr('y'),
-        width: dragRect.attr('width'),
-        height: dragRect.attr('height')
-      });
       this.removeData('dragRect');
-      dragRect.remove();
 
-      // for resmove Resizable Rect
-      const event = new Event('mousedown', {bubbles: false, cancelable: true});
-      this.node.dispatchEvent(event);
+      // update stuff
+      if (this.data('moveFlag')) {
+        updateSource$.next({
+          x: dragRect.attr('x'),
+          y: dragRect.attr('y'),
+          width: dragRect.attr('width'),
+          height: dragRect.attr('height')
+        });
+
+        // for resmove Resizable Rect
+        const event = new Event('mousedown', {bubbles: false, cancelable: true});
+        this.node.dispatchEvent(event);
+      }
+
+      dragRect.remove();
 
 
       return {};
@@ -72,20 +78,18 @@ export class GraphicRaphaelSet extends GraphicSet {
   }
 
   public draggable(): void {
-    let el: RaphaelElements;
+    this.isDraggable = true;
+
     for (const element of this.elements) {
-      el = element as RaphaelElements;
-      el.data('set', this);
-      el.drag(this.dragmove, this.dragstart, this.dragend);
+      this.setDraggableEvent(element as RaphaelElements);
     }
   }
 
   public resizable(): void {
-    let el: RaphaelElements;
+    this.isResizable = true;
+
     for (const element of this.elements) {
-      el = element as RaphaelElements;
-      el.data('set', this);
-      el.mousedown(getEditElementCallback(this.paper, this.updateSource$));
+      this.setResizableEvent(element as RaphaelElements);
     }
 
     const canvas = document.getElementById('canvas');
@@ -125,6 +129,8 @@ export class GraphicRaphaelSet extends GraphicSet {
       }
     }
 
+    setBBox.width = setBBox.x2 - setBBox.x;
+    setBBox.height = setBBox.y2 - setBBox.y;
     return setBBox;
   }
 
@@ -165,5 +171,15 @@ export class GraphicRaphaelSet extends GraphicSet {
       el.data('drag-start-x', elem.x);
       el.data('drag-start-y', elem.y);
     }
+  }
+
+  protected setDraggableEvent(element: RaphaelElements) {
+    element.data('set', this);
+    element.drag(this.dragmove, this.dragstart, this.dragend);
+  }
+
+  protected setResizableEvent(element: RaphaelElements) {
+    element.data('set', this);
+    element.mousedown(getEditElementCallback(this.paper, this.updateSource$, this.clickSource$));
   }
 }

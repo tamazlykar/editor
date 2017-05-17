@@ -80,3 +80,8 @@ export interface UpdateInfo {
   width: number;
   height: number;
 }
+
+export interface ClickInfo {
+  modelId: string;
+  viewId: string;
+}

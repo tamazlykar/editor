@@ -1,9 +1,9 @@
 import { ResizableRect } from './resizable-rect';
 import { GraphicRaphaelSet } from '../raphael-set';
 import { Subject } from 'rxjs/Subject';
-import { UpdateInfo } from '../../types';
+import { UpdateInfo, ClickInfo } from '../../types';
 
-export const getEditElementCallback = function(paper: RaphaelPaper, updateSource: Subject<UpdateInfo>) {
+export const getEditElementCallback = function(paper: RaphaelPaper, updateSource$: Subject<UpdateInfo> , clickSource$: Subject<ClickInfo>) {
   const radius = 3;
 
   function getRect(bBox: BoundingBox): RaphaelElement {
@@ -177,7 +177,7 @@ export const getEditElementCallback = function(paper: RaphaelPaper, updateSource
   function dragEnd(e) {
     const set = this.data('set').get();
     const rect = set[0];
-    updateSource.next({
+    updateSource$.next({
       x: rect.attr('x'),
       y: rect.attr('y'),
       width: rect.attr('width'),
@@ -188,6 +188,11 @@ export const getEditElementCallback = function(paper: RaphaelPaper, updateSource
 
   return function() {
     ResizableRect.remove();
+
+    clickSource$.next({
+      modelId: this.data('modelId'),
+      viewId: this.data('viewId')
+    });
 
     const set = this.data('set') as GraphicRaphaelSet;
     const bBox = set.getBBox();

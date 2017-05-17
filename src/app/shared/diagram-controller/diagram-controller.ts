@@ -4,14 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import {
   ElementPresentationModel,
+  ClassPresentationModel,
   CommentPresentationModel
 } from './presentation-model';
 import {
   ObjectModel,
+  ClassModel,
   CommentModel
 } from '../data-model/object-model';
 import {
   ViewModel,
+  ClassView,
   CommentView
 } from '../data-model/view-model';
 
@@ -68,28 +71,31 @@ export class DiagramController {
 
           this.viewToModelId.set(view.$key, model.$key);
           this.chooseInstanation(model, view);
-          this.setUpdateEvents(model, view);
+          if (model.elementType === 'Class') { // TODO
+            this.setUpdateEvents(model, view);
+          }
         });
       });
     }
   }
 
   private setUpdateEvents(model: ObjectModel, view: ViewModel) {
-    const modelStream =  this.modelService.getElementById(model.$key);
-    const viewStream = this.viewService.getElementById(view.$key);
-    const updateStream = Observable.combineLatest(modelStream, viewStream);
-    updateStream.subscribe(combined => {
-      const modelData = combined[0];
-      const viewData = combined[1];
-      console.log('CombineLatest');
-      this.elements.get(modelData.$key).update(modelData, viewData);
+    this.modelService.getElementById(model.$key).subscribe(modelData => {
+      this.elements.get(modelData.$key).updateModel(modelData);
+    });
+    this.viewService.getElementById(view.$key).subscribe(viewData => {
+      this.elements.get(viewData.modelId).updateView(viewData);
     });
   }
 
   private chooseInstanation(model: ObjectModel, view: ViewModel) {
     switch (model.elementType) {
-      case 'Comment': {
-        this.createCommentPresentation(model as CommentModel, view as CommentView);
+      // case 'Comment': {
+      //   this.createCommentPresentation(model as CommentModel, view as CommentView);
+      //   break;
+      // }
+      case 'Class': {
+        this.createClassPresentation(model as ClassModel, view as ClassView);
         break;
       }
     }
@@ -111,11 +117,26 @@ export class DiagramController {
     const presentationModel = new CommentPresentationModel(this.graphic, model, view);
     this.elements.set(model.$key, presentationModel);
     presentationModel.updateStream$.subscribe(updatedView => {
-      this.viewService.update(updatedView.$key, updatedView);
+      if (updatedView) {
+        this.viewService.update(updatedView.$key, updatedView);
+      }
+    });
+    presentationModel.clickStream$.subscribe(clickInfo => {
+      if (clickInfo) {
+        this.modelService.setSelectedModel(clickInfo.modelId);
+        this.viewService.setSelectedView(clickInfo.viewId);
+      }
     });
   }
 
-  private createClassPresentation() {
+  private createClassPresentation(model: ClassModel, view: ClassView) {
+    const presentationModel = new ClassPresentationModel(this.graphic, model, view);
+    this.elements.set(model.$key, presentationModel);
+    presentationModel.updateStream$.subscribe(updatedView => {
+      if (updatedView) {
+        this.viewService.update(updatedView.$key, updatedView);
+      }
+    });
   }
 
   private createInterfacePresentation() {}

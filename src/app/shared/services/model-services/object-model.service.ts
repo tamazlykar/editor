@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getObjectModelIds } from '../../redux/reducers';
+import { State, getObjectModelIds, getModelElementId } from '../../redux/reducers';
 import { getObjectModelById } from '../../redux/selectors';
+import * as app from '../../redux/actions/app';
 import { ObjectModelDataService } from '../data-services';
 
 import { ObjectModel } from '../../data-model';
@@ -40,5 +41,13 @@ export class ObjectModelService {
 
   public getElementById(id: string): Observable<ObjectModel> {
     return this.store.let(getObjectModelById(id));
+  }
+
+  public setSelectedModel(id: string) {
+    this.store.dispatch(new app.SetModelElementAction(id));
+  }
+
+  public getSelectedModel(): Observable<ObjectModel> {
+    return this.store.select(getModelElementId).switchMap(id => this.getElementById(id));
   }
 }

@@ -1,1 +1,1 @@
-export * from './element-explorer.component';
+export * from './element-explorer.module';

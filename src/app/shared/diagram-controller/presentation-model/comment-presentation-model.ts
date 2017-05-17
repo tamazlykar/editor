@@ -1,8 +1,9 @@
 import { ElementPresentationModel } from './element-presentation-model';
 import { CommentModel, CommentView} from '../../data-model';
-import { Graphics, Path, Text, GraphicSet, Color, UpdateInfo } from '../../graphics';
+import { Graphics, Path, Text, GraphicSet, Color, UpdateInfo, ClickInfo } from '../../graphics';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { deepDiffMapper } from '../diff-mapper/diff-mapper';
 
 export class CommentPresentationModel extends ElementPresentationModel {
   public updateStream$: Observable<CommentView>;
@@ -31,8 +32,12 @@ export class CommentPresentationModel extends ElementPresentationModel {
     const pathString = this.buildPathString(view.x, view.y, view.width, view.height);
     this.path = this.graphic.path(pathString);
     this.path.fill = Color.white;
+    this.path.data('modelId', model.$key);
+    this.path.data('viewId', view.$key);
 
     this.text = this.graphic.text(view.x + this.padding.left, view.y + this.padding.top, model.body);
+    this.text.data('modelId', model.$key);
+    this.text.data('viewId', view.$key);
 
     this.graphicSet.add(this.path);
     this.graphicSet.add(this.text);
@@ -47,6 +52,10 @@ export class CommentPresentationModel extends ElementPresentationModel {
       newView.height = updates.height;
 
       this.updateSubject$.next(newView);
+    });
+
+    this.graphicSet.clicks$.subscribe((clickInfo: ClickInfo) => {
+      this.clickSubject$.next(clickInfo);
     });
   }
 

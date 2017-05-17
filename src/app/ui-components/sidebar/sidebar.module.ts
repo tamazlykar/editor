@@ -5,7 +5,7 @@ import { MaterialModule } from '@angular/material';
 
 import { SidebarComponent } from './sidebar.component';
 
-import { ElementExplorerComponent } from './element-explorer';
+import { ElementExplorerModule } from './element-explorer';
 
 import { ProjectExplorerComponent } from './project-explorer';
 import { ProjectTreeComponent } from './project-explorer/project-tree';
@@ -14,7 +14,8 @@ import { ProjectTreeComponent } from './project-explorer/project-tree';
   imports: [
     CommonModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
+    ElementExplorerModule
   ],
   exports: [
     SidebarComponent
@@ -22,7 +23,6 @@ import { ProjectTreeComponent } from './project-explorer/project-tree';
   declarations: [
     SidebarComponent,
     ProjectExplorerComponent,
-    ElementExplorerComponent,
     ProjectTreeComponent
   ],
   providers: [],

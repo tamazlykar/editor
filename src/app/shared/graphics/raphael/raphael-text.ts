@@ -16,9 +16,12 @@ export class RaphaelText extends Text implements RaphaelElements {
   private _fontWeight: FontWeight;
   private _fill: Color;
 
-  constructor(paper: RaphaelPaper, x: number, y:number, text: string) {
+  constructor(paper: RaphaelPaper, x: number, y: number, text: string) {
     super();
     this.element = paper.text(x, y, text);
+    const bBox = this.element.getBBox();
+    this.element.attr('y', y + bBox.height / 2);
+    this.textAnchor = TextAnchor.start;
   }
 
   get x(): number {
@@ -30,11 +33,13 @@ export class RaphaelText extends Text implements RaphaelElements {
   }
 
   get y(): number {
-    return this.element.attr('y');
+    const bBox = this.element.getBBox()
+    return this.element.attr('y') - bBox.height / 2;
   }
 
   set y(y: number) {
-    this.element.attr('y', y);
+    const bBox = this.element.getBBox();
+    this.element.attr('y', y + bBox.height / 2);
   }
 
   get text(): string {

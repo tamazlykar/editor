@@ -15,7 +15,8 @@ export interface IComment {
 }
 
 interface ITypedElement extends INamedElement {
-  typeKey: string;
+  typeId: string;
+  typeName: string;
 }
 
 interface IRedifinableElement extends INamedElement {

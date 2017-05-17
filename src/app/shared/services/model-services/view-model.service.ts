@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getViewModelIds } from '../../redux/reducers';
+import { State, getViewModelIds, getViewElementId } from '../../redux/reducers';
 import { getViewModelById } from '../../redux/selectors';
+import * as app from '../../redux/actions/app';
 import { ViewModelDataService } from '../data-services';
 
 import { ViewModel } from '../../data-model';
@@ -35,7 +36,14 @@ export class ViewModelService {
   }
 
   public getElementById(id: string): Observable<ViewModel> {
-    this.store.let(getViewModelById(id)).subscribe(a => console.log('sbs:', a));
     return this.store.let(getViewModelById(id));
+  }
+
+  public setSelectedView(id: string) {
+    this.store.dispatch(new app.SetViewElementAction(id));
+  }
+
+  public getSelectedView(): Observable<ViewModel> {
+    return this.store.select(getViewElementId).switchMap(id => this.getElementById(id));
   }
 }

@@ -1,16 +1,29 @@
 import { Element, Text } from './elements';
 import { RaphaelText } from './raphael/raphael-text';
 import { Subject } from 'rxjs/Subject';
-import { UpdateInfo } from './types';
+import { UpdateInfo, ClickInfo } from './types';
+import {element} from "protractor";
 
 export abstract class GraphicSet {
   protected elements: Array<Element>;
   protected updateSource$ = new Subject<UpdateInfo>();
+  protected clickSource$ = new Subject<ClickInfo>();
+  protected isDraggable = false;
+  protected isResizable = false;
 
   public updates$ = this.updateSource$.asObservable();
+  public clicks$ = this.clickSource$.asObservable();
 
   public add(element: Element): void {
     this.elements.push(element);
+
+    if (this.isDraggable) {
+      this.setDraggableEvent(element);
+    }
+
+    if (this.isResizable) {
+      this.setResizableEvent(element);
+    }
   }
 
   public remove(element: Element): void {
@@ -26,5 +39,24 @@ export abstract class GraphicSet {
   public abstract draggable(): void;
 
   public abstract resizable(): void;
+
+  public forEach(func: (value: Element, index?: number) => void) {
+    this.elements.forEach(func);
+  }
+
+  public clear() {
+    this.elements.length = 0;
+  }
+
+  public get length() {
+    return this.elements.length;
+  }
+
+  public getElements() {
+    return this.elements;
+  }
+
+  protected abstract setDraggableEvent(element: Element);
+  protected abstract setResizableEvent(element: Element);
 }
 

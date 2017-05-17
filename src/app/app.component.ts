@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     private diagramService: DiagramService
   ) {
     this.autoselect();
-    this.printStore();
+    // this.printStore();
   }
 
   public ngOnInit() {

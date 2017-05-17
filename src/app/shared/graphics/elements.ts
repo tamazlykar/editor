@@ -10,6 +10,7 @@ import {
 } from './types';
 
 export abstract class Element {
+  abstract data(key: string, value?: any): any;
   abstract hide();
   abstract show();
   abstract getBBox(): BoundingBox;
