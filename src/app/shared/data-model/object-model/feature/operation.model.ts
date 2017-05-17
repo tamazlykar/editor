@@ -1,18 +1,20 @@
-import { IProperty, AggregationKind, VisibilityKind } from '../metamodel';
+import { IOperation, VisibilityKind } from '../metamodel';
 import { generatePushID } from '../../../id-generator';
+import { ParameterModel } from './papameter.model';
 
-export class PropertyModel implements IProperty {
+export class OperationModel implements IOperation {
   id: string;
   name: string;
   visibility: VisibilityKind;
   typeId: string;
   typeName: string;
-  aggregation: AggregationKind;
   isStatic: boolean;
   isLeaf: boolean;
   commentIds: Array<string>;
+  parameters: Array<ParameterModel>;
+  isAbstract: boolean;
 
-  public static toString(model: PropertyModel) {
+  public static toString(model: OperationModel) {
     let v: string;
     switch (model.visibility) {
       case VisibilityKind.public: {
@@ -29,12 +31,21 @@ export class PropertyModel implements IProperty {
       }
     }
 
+    let params = '';
+    if (model.parameters) {
+      params = ParameterModel.toString(model.parameters[0]);
+
+      for (let i = 1; i < model.parameters.length; i++) {
+        params += ', ' + ParameterModel.toString(model.parameters[i]);
+      }
+    }
+
     let type = '';
     if (model.typeName) {
       type = `: ${model.typeName}`;
     }
 
-    return `${v}${model.name}${type}`;
+    return `${v}${model.name}(${params})${type}`;
   }
 
   constructor(name: string) {
@@ -43,9 +54,10 @@ export class PropertyModel implements IProperty {
     this.visibility = VisibilityKind.public;
     this.typeId = null;
     this.typeName = null;
-    this.aggregation = AggregationKind.none;
     this.isStatic = false;
     this.isLeaf = false;
     this.commentIds = [];
+    this.parameters = [];
+    this.isAbstract = false;
   }
 }

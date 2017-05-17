@@ -24,7 +24,6 @@ interface IRedifinableElement extends INamedElement {
 }
 
 export interface IParameter extends ITypedElement {
-  operation: IBehavioralFeature;
 }
 
 export interface IClassifier extends INamedElement {
