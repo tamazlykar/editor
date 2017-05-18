@@ -41,16 +41,19 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
     this.attributeCompartment = new AttributeCompartment(this.graphics);
     const attrSizes = this.attributeCompartment.build(model, view, nameSizes.height);
 
+    this.operationCompartment = new OperationCompartment(this.graphics);
+    const operSizes = this.operationCompartment.build(model, view, nameSizes.height + attrSizes.height);
+
 
     this.graphicSetInitialize();
 
 
     if (view.height === 0 && view.width === 0) {
-      const maxWidth = Math.max(view.width, nameSizes.width, attrSizes.width);
+      const maxWidth = Math.max(view.width, nameSizes.width, attrSizes.width, operSizes.width);
       // update view if it was new view object
       const newView = Object.assign({}, view);
       newView.width = maxWidth;
-      newView.height = nameSizes.height + attrSizes.height; // TODO
+      newView.height = nameSizes.height + attrSizes.height + operSizes.height;
 
       this.updateSubject$.next(newView);
     }
@@ -59,9 +62,10 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
   public updateModel(model: ClassModel | InterfaceModel) {
     const nameSizes = this.nameCompartment.updateModel(model);
     const attrSizes = this.attributeCompartment.updateModel(model);
+    const operSizes = this.operationCompartment.updateModel(model);
 
-    const width = Math.max(nameSizes.width, attrSizes.width);
-    const height = nameSizes.height + attrSizes.height; // TODO
+    const width = Math.max(nameSizes.width, attrSizes.width, operSizes.width);
+    const height = nameSizes.height + attrSizes.height + operSizes.height;
 
     if (this.view.width < width || this.view.height < height) {
       const updateInfo: UpdateInfo = {
@@ -79,9 +83,10 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
 
     const nameSizes = this.nameCompartment.updateView(view);
     const attrSizes = this.attributeCompartment.updateView(view, nameSizes.height);
+    const operSizes = this.operationCompartment.updateView(view, nameSizes.height + attrSizes.height);
 
-    const width = Math.max(nameSizes.width, attrSizes.width);
-    const height = nameSizes.height + attrSizes.height; // TODO
+    const width = Math.max(nameSizes.width, attrSizes.width, operSizes.width);
+    const height = nameSizes.height + attrSizes.height + operSizes.height;
 
     this.updateGraphicSetElements();
 
@@ -119,20 +124,10 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
   private graphicSetInitialize() {
     this.graphicSet = this.graphics.set();
 
-    const nameEl = this.nameCompartment.getGraphicElements();
-    const attrEl = this.attributeCompartment.getGraphicElements();
-    // TODO
+    const elements = this.getElementsFromCompartments();
 
-    for (const el of nameEl) {
-      if (el) {
+    for (const el of elements) {
         this.graphicSet.add(el);
-      }
-    }
-
-    for (const el of attrEl) {
-      if (el) {
-        this.graphicSet.add(el);
-      }
     }
 
     this.graphicSet.draggable();
@@ -143,6 +138,7 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
 
   private updateGraphicSetElements() {
     const newSetElements = this.getElementsFromCompartments();
+
     if (this.graphicSet.length > newSetElements.length) {
       const removedItems = this.getDifference(newSetElements, this.graphicSet.getElements());
       for (const item of removedItems) {
@@ -157,7 +153,10 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
   }
 
   private getElementsFromCompartments(): Array<Element> {
-    return [...this.nameCompartment.getGraphicElements(), ...this.attributeCompartment.getGraphicElements()];
+    const nameEl = this.nameCompartment.getGraphicElements();
+    const attrEl = this.attributeCompartment.getGraphicElements();
+    const operEl = this.operationCompartment.getGraphicElements();
+    return [...nameEl, ...attrEl, ...operEl];
   }
 
   private getDifference(arr1: Array<any>, arr2: Array<any>) {

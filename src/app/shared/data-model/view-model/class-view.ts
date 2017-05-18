@@ -20,6 +20,7 @@ export class ClassView extends ViewModel {
     this.nameCompartmentHeight = 0;
     this.attributeCompartmentHeight = 0;
     this.operationCompartmentHeight = 0;
-    this.attributes = new Array<string>();
+    this.attributes = [];
+    this.operations = [];
   }
 }

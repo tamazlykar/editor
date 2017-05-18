@@ -3,7 +3,6 @@ import { CommentModel, CommentView} from '../../data-model';
 import { Graphics, Path, Text, GraphicSet, Color, UpdateInfo, ClickInfo } from '../../graphics';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { deepDiffMapper } from '../diff-mapper/diff-mapper';
 
 export class CommentPresentationModel extends ElementPresentationModel {
   public updateStream$: Observable<CommentView>;

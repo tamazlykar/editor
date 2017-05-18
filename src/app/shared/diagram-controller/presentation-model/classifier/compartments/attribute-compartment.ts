@@ -1,4 +1,4 @@
-import { Graphics, Rectangle, Text, TextAnchor, Element, FontStyle } from '../../../../graphics';
+import { Graphics, Rectangle, Text, TextAnchor, Element, FontStyle, TextDecoration } from '../../../../graphics';
 import { ClassModel, InterfaceModel, PropertyModel } from '../../../../data-model/object-model';
 import { ClassView, InterfaceView } from '../../../../data-model/view-model';
 import { CompartmentSize } from './types';
@@ -158,7 +158,12 @@ export class AttributeCompartment {
     if ((view.attributes && oldView.attributes && view.attributes.length > oldView.attributes.length) ||
       (!oldView.attributes && view.attributes)) { // attr added
       const attrId = view.attributes[view.attributes.length - 1]; // new attr should be last
-      const textBlockHeight = this.getTextBlockHeight();
+      let textBlockHeight = this.getTextBlockSize().height;
+      if (textBlockHeight === 0) {
+        textBlockHeight += AttributeCompartment.padding.top;
+      } else {
+        textBlockHeight -= AttributeCompartment.padding.bottom;
+      }
       const x = view.x + AttributeCompartment.padding.left;
       const y = view.y + heightOffset + textBlockHeight - AttributeCompartment.padding.bottom + AttributeCompartment.padding.between;
       let model: PropertyModel;
@@ -169,6 +174,7 @@ export class AttributeCompartment {
         }
       }
       const newAttr = this.addAttribute(x, y, model); // TODO data
+      this.setData(newAttr, this.model.$key, this.view.$key, model.id);
       const bBox = newAttr.getBBox();
 
       if (!isLastCompartment) {
@@ -187,7 +193,7 @@ export class AttributeCompartment {
     }
 
     if (newModel.isStatic !== oldModel.isStatic) {
-      // TODO
+      element.textDecoration = newModel.isStatic ? TextDecoration.underline : TextDecoration.none;
     }
 
     if (oldModel.id !== newModel.id) {
@@ -197,16 +203,17 @@ export class AttributeCompartment {
 
   private setAttributeModel(element: Text, model: PropertyModel) {
     element.text = PropertyModel.toString(model);
-    // TODO static
+    element.textDecoration = model.isStatic ? TextDecoration.underline : TextDecoration.none;
+
     this.setSubmodelId(element, model.id);
   }
 
   private addAttribute(x: number, y: number, model: PropertyModel) {
     const newAttr = this.graphics.text(x, y, PropertyModel.toString(model));
+    this.setAttributeModel(newAttr, model);
     this.attributes.push(newAttr);
 
     return newAttr;
-    // TODO static
   }
 
   private removeAttribute(existAttributes: Array<PropertyModel>) {
@@ -256,38 +263,37 @@ export class AttributeCompartment {
     element.data('submodelId', submodelId);
   }
 
-  private getTextBlockHeight(): number {
-    let height = AttributeCompartment.padding.top;
+  private getTextBlockSize(): { width: number, height: number } {
+    let height = 0;
+    let width = 0;
+
+    if (this.attributes.length === 0) {
+      return {width, height};
+    }
+
+    height = AttributeCompartment.padding.top;
 
     for (let i = 0; i < this.attributes.length; i++) {
       const bBox = this.attributes[i].getBBox();
       height += bBox.height + AttributeCompartment.padding.between;
+      if (width < bBox.width) {
+        width = bBox.width;
+      }
     }
 
     height += AttributeCompartment.padding.bottom - AttributeCompartment.padding.between;
+    width = AttributeCompartment.padding.left + width + AttributeCompartment.padding.right;
 
-    return height;
+    return {width, height};
   }
 
   private getCompartmentSize(): CompartmentSize {
     const rectBBox = this.rect.getBBox();
-
-    let attrWidth = 0;
-    let attrHeight = AttributeCompartment.padding.top;
-    for (const attr of this.attributes) {
-      const bBox = attr.getBBox();
-      attrHeight += bBox.height + AttributeCompartment.padding.between;
-      if (attrWidth < bBox.width) {
-        attrWidth = bBox.width;
-      }
-    }
-    attrHeight += AttributeCompartment.padding.bottom - AttributeCompartment.padding.between;
-    attrWidth = AttributeCompartment.padding.left + attrWidth + AttributeCompartment.padding.right;
-
+    const textBlockSize = this.getTextBlockSize();
 
     return {
-      width: Math.max(attrWidth, rectBBox.width),
-      height: Math.max(attrHeight, rectBBox.height)
+      width: Math.max(textBlockSize.width, rectBBox.width),
+      height: Math.max(textBlockSize.height, rectBBox.height)
     };
   }
 
@@ -296,10 +302,10 @@ export class AttributeCompartment {
   }
 
   private isCompartmentRemoved(oldView: ClassView | InterfaceView, newView: ClassView | InterfaceView) {
-    return oldView.attributes && !newView.attributes;
+    return oldView.attributes && !newView.attributes ? true : false;
   }
 
   private isCompartmentAdded(oldView: ClassView | InterfaceView, newView: ClassView | InterfaceView) {
-    return !oldView.attributes && newView.attributes;
+    return !oldView.attributes && newView.attributes ? true : false;
   }
 }
