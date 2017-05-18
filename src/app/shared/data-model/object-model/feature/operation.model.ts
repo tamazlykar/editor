@@ -29,6 +29,10 @@ export class OperationModel implements IOperation {
         v = '#';
         break;
       }
+      default: {
+        v = ' ';
+        break;
+      }
     }
 
     let params = '';

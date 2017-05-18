@@ -27,6 +27,10 @@ export class PropertyModel implements IProperty {
         v = '#';
         break;
       }
+      default: {
+        v = ' ';
+        break;
+      }
     }
 
     let type = '';
