@@ -56,6 +56,18 @@ export abstract class GraphicSet {
     return this.elements;
   }
 
+  public addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.elements.forEach((value) => {
+      value.addEventListener(type, listener);
+    })
+  }
+
+  public removeEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.elements.forEach((value) => {
+      value.removeEventListener(type, listener);
+    })
+  }
+
   protected abstract setDraggableEvent(element: Element);
   protected abstract setResizableEvent(element: Element);
 }

@@ -6,9 +6,9 @@ export enum AggregationKind {
 
 export class Visibility {
   public static elements = [
-    { viewValue: '+', name: 'public', value: 0 },
-    { viewValue: '#', name: 'protected', value: 1 },
-    { viewValue: '-', name: 'private', value: 2 }
+    { name: 'public', value: 0 },
+    { name: 'protected', value: 1 },
+    { name: 'private', value: 2 }
   ];
 }
 

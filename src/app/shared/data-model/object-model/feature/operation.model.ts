@@ -1,18 +1,19 @@
+import { ObjectModel } from '../object.model';
 import { IOperation, VisibilityKind } from '../metamodel';
 import { generatePushID } from '../../../id-generator';
 import { ParameterModel } from './papameter.model';
 
-export class OperationModel implements IOperation {
+export class OperationModel extends ObjectModel implements IOperation {
   id: string;
   name: string;
   visibility: VisibilityKind;
   typeId: string;
   typeName: string;
   isStatic: boolean;
+  isAbstract: boolean;
   isLeaf: boolean;
   commentIds: Array<string>;
   parameters: Array<ParameterModel>;
-  isAbstract: boolean;
 
   public static toString(model: OperationModel) {
     let v: string;
@@ -53,6 +54,7 @@ export class OperationModel implements IOperation {
   }
 
   constructor(name: string) {
+    super('Operation');
     this.id = generatePushID();
     this.name = name;
     this.visibility = VisibilityKind.public;

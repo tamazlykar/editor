@@ -1,10 +1,20 @@
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
-import { CommentComponent } from '../element-properties';
+import {
+  CommentComponent,
+  ClassComponent,
+  StubComponent,
+  PropertyComponent,
+  OperationComponent
+} from '../element-properties';
 
 @Component({
   selector: 'uml-dynamic-component',
   entryComponents: [
-    CommentComponent
+    CommentComponent,
+    ClassComponent,
+    StubComponent,
+    PropertyComponent,
+    OperationComponent
   ],
   template: '<div #dynamicComponentContainer></div>',
 })
@@ -15,7 +25,7 @@ export class DynamicComponent {
 
   // component: Class for the component you want to create
   // inputs: An object with key/value pairs mapped to input name/input value
-  @Input() set componentData(data: {component: any, inputs: any }) {
+  @Input() set componentData(data: {component: any, inputs: any}) {
     if (!data) {
       return;
     }

@@ -20,6 +20,8 @@ import { InstrumentalPanelComponent } from './ui-components/instrumental-panel';
 
 import { AuthService, FirebaseAuthService } from './shared/services/auth-service';
 
+import { DragManagerService } from './shared/services/drag-manager-service';
+
 import {
   ProjectDataService,
   DiagramDataService,
@@ -75,7 +77,8 @@ const firebaseAuthConfig = {
     DiagramService,
     ObjectModelService,
     ViewModelService,
-    { provide: AuthService, useClass: FirebaseAuthService }
+    { provide: AuthService, useClass: FirebaseAuthService },
+    DragManagerService
   ],
   bootstrap: [AppComponent]
 })

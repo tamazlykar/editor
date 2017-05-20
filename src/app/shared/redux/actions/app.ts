@@ -29,7 +29,7 @@ export class SetDiagramAction implements Action {
 export class SetModelElementAction implements Action {
   public type = ActionTypes.SET_MODEL_ELEMENT;
 
-  constructor(public payload: string | null) {};
+  constructor(public payload: {modelId: string | null, submodelId: string | null}) {};
 }
 
 export class SetViewElementAction implements Action {

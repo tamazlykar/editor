@@ -5,5 +5,7 @@
   <md-list-item
     (click)="createCommnet()"
   >Комментарий</md-list-item>
-  <md-list-item> Paprika </md-list-item>
+  <md-list-item
+    (mousedown)="onMouseDown($event, {})"
+  > Paprika </md-list-item>
 </md-list>

@@ -47,6 +47,10 @@ export class DiagramController {
 
   public initialize(element: HTMLElement) {
     this.graphic = new Graphics(element, 800, 600);
+    element.addEventListener('mousedown', () => {
+      this.modelService.setSelectedModel(null);
+      this.viewService.setSelectedView(null);
+    });
     this.createElements();
   }
 
@@ -135,6 +139,12 @@ export class DiagramController {
     presentationModel.updateStream$.subscribe(updatedView => {
       if (updatedView) {
         this.viewService.update(updatedView.$key, updatedView);
+      }
+    });
+    presentationModel.clickStream$.subscribe(clickInfo => {
+      if (clickInfo) {
+        this.modelService.setSelectedModel(clickInfo.modelId, clickInfo.submodelId);
+        this.viewService.setSelectedView(clickInfo.viewId);
       }
     });
   }

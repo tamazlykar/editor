@@ -191,7 +191,8 @@ export const getEditElementCallback = function(paper: RaphaelPaper, updateSource
 
     clickSource$.next({
       modelId: this.data('modelId'),
-      viewId: this.data('viewId')
+      viewId: this.data('viewId'),
+      submodelId: this.data('submodelId')
     });
 
     const set = this.data('set') as GraphicRaphaelSet;

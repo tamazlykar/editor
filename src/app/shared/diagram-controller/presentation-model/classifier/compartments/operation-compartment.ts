@@ -55,6 +55,7 @@ export class OperationCompartment {
     height = view.height - heightOffset;
 
     this.rect.height = Math.max(textBlockHeight, height);
+    this.setModelAndViewIds(this.rect, model.$key, view.$key);
 
     return this.getCompartmentSize();
   }

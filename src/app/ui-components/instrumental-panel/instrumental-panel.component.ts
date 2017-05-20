@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewModelDataService, ObjectModelDataService} from '../../shared/services/data-services';
+import { DragManagerService } from '../../shared/services/drag-manager-service';
 import { ClassModel, InterfaceModel, CommentModel } from '../../shared/data-model/object-model';
 import { ClassView, InterfaceView, CommentView } from '../../shared/data-model/view-model';
 
@@ -11,7 +12,8 @@ import { ClassView, InterfaceView, CommentView } from '../../shared/data-model/v
 export class InstrumentalPanelComponent {
   constructor(
     private modelService: ObjectModelDataService,
-    private viewService: ViewModelDataService
+    private viewService: ViewModelDataService,
+    private dragService: DragManagerService
   ) { }
 
   public createClass() {
@@ -30,5 +32,10 @@ export class InstrumentalPanelComponent {
         const view = new CommentView(id, 50, 50);
         this.viewService.add(view);
       });
+  }
+
+  public onMouseDown(e, data) {
+    console.log('InstrumentPanel: mousedown');
+    this.dragService.drag(e, data);
   }
 }

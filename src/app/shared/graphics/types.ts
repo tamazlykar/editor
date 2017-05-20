@@ -84,4 +84,5 @@ export interface UpdateInfo {
 export interface ClickInfo {
   modelId: string;
   viewId: string;
+  submodelId: string;
 }

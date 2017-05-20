@@ -5,7 +5,11 @@ import { MaterialModule } from '@angular/material';
 
 import { ElementExplorerComponent } from './element-explorer.component';
 import { DynamicComponent } from './dynamic-component/dynamic-component';
-import { CommentComponent } from './element-properties';
+import {
+  CommentComponent, ClassComponent, StubComponent,
+  PropertyComponent,
+  OperationComponent
+} from './element-properties';
 
 @NgModule({
     imports: [
@@ -19,7 +23,11 @@ import { CommentComponent } from './element-properties';
     declarations: [
       ElementExplorerComponent,
       DynamicComponent,
-      CommentComponent
+      CommentComponent,
+      ClassComponent,
+      StubComponent,
+      PropertyComponent,
+      OperationComponent
     ],
     providers: [],
 })

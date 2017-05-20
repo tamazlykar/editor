@@ -15,6 +15,9 @@ export abstract class Element {
   abstract show();
   abstract getBBox(): BoundingBox;
   abstract remove();
+
+  abstract addEventListener(type: string, listener: EventListenerOrEventListenerObject);
+  abstract removeEventListener(type: string, listener: EventListenerOrEventListenerObject);
 }
 
 export abstract class Text extends Element {

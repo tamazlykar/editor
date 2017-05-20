@@ -5,6 +5,7 @@ export interface State {
   projectId: string | null;
   diagramId: string | null;
   modelElementId: string | null;
+  submodelElementId: string | null;
   viewElementId: string | null;
 }
 
@@ -13,10 +14,11 @@ export const initialState: State = {
   projectId: null,
   diagramId: null,
   modelElementId: null,
+  submodelElementId: null,
   viewElementId: null
 };
 
-export function reducer(state = initialState, action: Actions): State {
+export function reducer(state = initialState, action: any): State {
   switch (action.type) {
     case ActionTypes.SET_USER: {
       const userId = action.payload;
@@ -31,8 +33,9 @@ export function reducer(state = initialState, action: Actions): State {
       return Object.assign({}, state, {diagramId});
     }
     case ActionTypes.SET_MODEL_ELEMENT: {
-      const modelElementId = action.payload;
-      return Object.assign({}, state, {modelElementId});
+      const modelElementId = action.payload.modelId;
+      const submodelElementId = action.payload.submodelId;
+      return Object.assign({}, state, {modelElementId}, {submodelElementId});
     }
     case ActionTypes.SET_VIEW_ELEMENT: {
       const viewElementId = action.payload;
@@ -48,4 +51,5 @@ export const getUserId = (state: State) => state.userId;
 export const getProjectId = (state: State) => state.projectId;
 export const getDiagramId = (state: State) => state.diagramId;
 export const getModelElementId = (state: State) => state.modelElementId;
+export const getSubmodelElementId = (state: State) => state.submodelElementId;
 export const getViewElementId = (state: State) => state.viewElementId;

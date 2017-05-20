@@ -89,9 +89,9 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
     }
   }
 
-  public drag(onmove: (dx: number, dy: number, x: number, y: number, event: DragEvent) =>{ },
-              onstart: (x: number, y: number, event: DragEvent) =>{ },
-              onend: (DragEvent: any) =>{ })
+  public drag(onmove: (dx: number, dy: number, x: number, y: number, event: DragEvent) => {},
+              onstart: (x: number, y: number, event: DragEvent) => {},
+              onend: (DragEvent: any) => {})
   {
     this.element.drag(onmove, onstart, onend);
   }
@@ -115,4 +115,13 @@ export class RaphaelRectangle extends Rectangle implements RaphaelElements {
   public mousedown(handler: Function) {
     this.element.mousedown(handler);
   }
+
+  public addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.element.node.addEventListener(type, listener);
+  }
+
+  public removeEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.element.node.removeEventListener(type, listener);
+  }
+
 }

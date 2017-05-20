@@ -27,8 +27,11 @@ export class DevelopViewComponent implements AfterViewInit {
     const element = document.getElementById('canvas');
     this.diagramController = new DiagramController(this.modelService, this.viewService);
     this.diagramController.initialize(element);
+
+    // element.addEventListener('mouseup', (event) => console.log('Cnavas: mouseUP', document.elementFromPoint(event.clientX, event.clientY)));
     // this.g = new Graphics(element, 800, 600);
     // this.testing();
+
   }
 
   private testing() {

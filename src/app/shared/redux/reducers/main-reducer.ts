@@ -45,6 +45,7 @@ export const getUserId = createSelector(getAppState, app.getUserId);
 export const getProjectId = createSelector(getAppState, app.getProjectId);
 export const getDiagramId = createSelector(getAppState, app.getDiagramId);
 export const getModelElementId = createSelector(getAppState, app.getModelElementId);
+export const getSubmodelElementId = createSelector(getAppState, app.getSubmodelElementId);
 export const getViewElementId = createSelector(getAppState, app.getViewElementId);
 
 

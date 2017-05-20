@@ -152,4 +152,12 @@ export class RaphaelText extends Text implements RaphaelElements {
   public mousedown(handler: Function) {
     this.element.mousedown(handler);
   }
+
+  public addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.element.node.addEventListener(type, listener);
+  }
+
+  public removeEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+    this.element.node.removeEventListener(type, listener);
+  }
 }

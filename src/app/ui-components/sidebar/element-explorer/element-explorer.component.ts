@@ -1,6 +1,14 @@
 import { Component } from '@angular/core';
-import { CommentComponent } from './element-properties';
 import { ObjectModelService, ViewModelService } from '../../../shared/services/model-services';
+import { ObjectModel } from '../../../shared/data-model/object-model';
+import { ViewModel } from '../../../shared/data-model/view-model';
+import {
+  CommentComponent,
+  ClassComponent,
+  StubComponent,
+  PropertyComponent,
+  OperationComponent
+} from './element-properties';
 
 @Component({
     selector: 'uml-element-explorer',
@@ -16,6 +24,50 @@ export class ElementExplorerComponent {
     private viewService: ViewModelService
   ) {
     this.viewService.getSelectedView().subscribe(a => console.log('v', a));
-    this.modelService.getSelectedModel().subscribe(a => console.log('m', a));
+    this.modelService.getSelectedModel().subscribe(model => {
+      console.log('m', model);
+      this.onModelChange(model);
+    });
   }
+
+  private onModelChange(model: ObjectModel) {
+    if (!model) {
+      this.componentData = {
+        component: StubComponent,
+        inputs: {}
+      };
+      return;
+    }
+
+    switch (model.elementType) {
+      case 'Class': {
+        this.componentData = {
+          component: ClassComponent,
+          inputs: {}
+        };
+        break;
+      }
+      case 'Property': {
+        this.componentData = {
+          component: PropertyComponent,
+          inputs: {}
+        };
+        break;
+      }
+      case 'Operation': {
+        this.componentData = {
+          component: OperationComponent,
+          inputs: {}
+        };
+        break;
+      }
+      default: {
+        this.componentData = {
+          component: StubComponent,
+          inputs: {}
+        };
+        break;
+      }
+    }
+  };
 }

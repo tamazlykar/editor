@@ -1,0 +1,31 @@
+<md-card>
+  <md-card-title>Класс</md-card-title>
+  <md-input-container class="input">
+    <input
+      mdInput
+      #name
+      placeholder="Имя"
+      [value]="model.name"
+      (keyup.enter)="onNameChanged(name.value)"
+      (blur)="onNameChanged(name.value)"
+    >
+  </md-input-container>
+
+  <md-select
+    class="select"
+    placeholder="Видимость"
+    [(ngModel)]="model.visibility"
+    (change)="onVisibilityChanged()"
+  >
+    <md-option
+      *ngFor="let visibility of visibilityElements"
+      [value]="visibility.value"
+    >{{ visibility.name }}</md-option>
+  </md-select>
+
+  <md-checkbox
+    class="checkbox"
+    [(ngModel)]="model.isAbstract"
+    (change)="onAbstractChanged()"
+  >Абстрактный</md-checkbox>
+</md-card>

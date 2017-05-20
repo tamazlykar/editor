@@ -1,7 +1,8 @@
+import { ObjectModel } from '../object.model';
 import { IProperty, AggregationKind, VisibilityKind } from '../metamodel';
 import { generatePushID } from '../../../id-generator';
 
-export class PropertyModel implements IProperty {
+export class PropertyModel extends ObjectModel implements IProperty {
   id: string;
   name: string;
   visibility: VisibilityKind;
@@ -42,6 +43,7 @@ export class PropertyModel implements IProperty {
   }
 
   constructor(name: string) {
+    super('Property');
     this.id = generatePushID();
     this.name = name;
     this.visibility = VisibilityKind.public;

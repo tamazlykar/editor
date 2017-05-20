@@ -1,0 +1,49 @@
+<md-card>
+  <md-card-title>Операция</md-card-title>
+  <md-input-container class="input padding-bottom">
+    <input
+      mdInput
+      #name
+      placeholder="Имя"
+      [value]="model.name"
+      (keyup.enter)="onNameChanged(name.value)"
+      (blur)="onNameChanged(name.value)"
+    >
+  </md-input-container>
+
+  <md-select
+    class="select"
+    placeholder="Видимость"
+    [(ngModel)]="model.visibility"
+    (change)="update()"
+  >
+    <md-option
+      *ngFor="let visibility of visibilityElements"
+      [value]="visibility.value"
+    >{{ visibility.name }}</md-option>
+  </md-select>
+
+  <md-input-container class="type-input">
+    <input
+      mdInput
+      #type
+      placeholder="Тип"
+      [value]="model.typeName ? model.typeName : ''"
+      (keyup.enter)="onTypeChanged(type.value)"
+      (blur)="onTypeChanged(type.value)"
+    >
+  </md-input-container>
+
+  <md-checkbox
+    class="checkbox-is-abstract"
+    [(ngModel)]="model.isAbstract"
+    (change)="update()"
+  >Абстрактная</md-checkbox>
+
+  <md-checkbox
+    class="checkbox-is-static"
+    [(ngModel)]="model.isStatic"
+    (change)="update()"
+  >Статическая</md-checkbox>
+
+</md-card>
