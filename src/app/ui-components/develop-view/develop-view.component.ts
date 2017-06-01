@@ -1,7 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Graphics } from '../../shared/graphics';
-import { DiagramController } from '../../shared/diagram-controller';
-import { ObjectModelService, ViewModelService } from '../../shared/services/model-services';
+import { DiagramControllerService } from '../../shared/diagram-controller';
 
 
 @Component({
@@ -10,52 +9,13 @@ import { ObjectModelService, ViewModelService } from '../../shared/services/mode
   styleUrls: ['develop-view.component.css']
 })
 export class DevelopViewComponent implements AfterViewInit {
-  private g: Graphics;
-  private diagramController: DiagramController;
 
   constructor(
-    private modelService: ObjectModelService,
-    private viewService: ViewModelService
-  ) {
-    this.test();
-  }
-
-  public test() {
-  }
+    private diagramController: DiagramControllerService
+  ) { }
 
   public ngAfterViewInit(): void {
     const element = document.getElementById('canvas');
-    this.diagramController = new DiagramController(this.modelService, this.viewService);
     this.diagramController.initialize(element);
-
-    // element.addEventListener('mouseup', (event) => console.log('Cnavas: mouseUP', document.elementFromPoint(event.clientX, event.clientY)));
-    // this.g = new Graphics(element, 800, 600);
-    // this.testing();
-
-  }
-
-  private testing() {
-    let text = this.g.text(50, 50, "Hello world!");
-    let text2 = this.g.text(100, 100, 'Hello man');
-    let set1 = this.g.set();
-    set1.add(text);
-    set1.add(text2);
-    set1.draggable();
-
-    let rect = this.g.rect(300, 300, 100, 200);
-    let text3 = this.g.text(350, 350, 'ClassName');
-    let line = this.g.line(600, 200, 800, 200);
-    console.log('Line x1', line.x1);
-    console.log('Line', line);
-    let set2 = this.g.set();
-    set2.add(rect);
-    set2.add(text3);
-    set2.add(line);
-    set2.draggable();
-
-    // let line = this.g.line(600, 200, 800, 200);
-    // let set3 = this.g.set();
-    // set3.add(line);
-    // set3.draggable(true);
   }
 }

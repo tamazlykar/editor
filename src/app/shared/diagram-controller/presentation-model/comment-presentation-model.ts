@@ -9,7 +9,6 @@ export class CommentPresentationModel extends ElementPresentationModel {
   private updateSubject$: Subject<CommentView>;
   private path: Path;
   private text: Text;
-  private graphicSet: GraphicSet;
   private graphic: Graphics;
   private view: CommentView;
   private readonly noteSymbolSize = 15;
@@ -35,6 +34,7 @@ export class CommentPresentationModel extends ElementPresentationModel {
     this.path.data('viewId', view.$key);
 
     this.text = this.graphic.text(view.x + this.padding.left, view.y + this.padding.top, model.body);
+    this.text.fontSize = 12;
     this.text.data('modelId', model.$key);
     this.text.data('viewId', view.$key);
 
@@ -58,17 +58,24 @@ export class CommentPresentationModel extends ElementPresentationModel {
     });
   }
 
-  public update(model: CommentModel, view: CommentView) {
-    this.view = view;
+  public updateModel(model: CommentModel) {
+    this.text.text = model.body;
+  }
 
+  public updateView(view: CommentView) {
+    this.view = view;
     this.path.path = this.buildPathString(view.x, view.y, view.width, view.height);
     this.text.x = view.x + this.padding.left;
     this.text.y = view.y + this.padding.top;
-    this.text.text = model.body;
   }
 
   private buildPathString(x: number, y: number, w: number, h: number) {
     const t = this.noteSymbolSize;
     return `M${x},${y}V${y + h}H${x + w}V${y + t}L${x + w - t},${y}H${x}M${x + w - t},${y}V${y + t}H${x + w}`;
+  }
+
+  public remove() {
+    this.path.remove();
+    this.text.remove();
   }
 }

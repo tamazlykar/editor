@@ -10,6 +10,7 @@ export abstract class GraphicSet {
   protected clickSource$ = new Subject<ClickInfo>();
   protected isDraggable = false;
   protected isResizable = false;
+  private events: Array<{type: string, listener: EventListenerOrEventListenerObject}> = [];
 
   public updates$ = this.updateSource$.asObservable();
   public clicks$ = this.clickSource$.asObservable();
@@ -24,6 +25,10 @@ export abstract class GraphicSet {
     if (this.isResizable) {
       this.setResizableEvent(element);
     }
+
+    this.events.forEach(event => {
+      element.addEventListener(event.type, event.listener);
+    });
   }
 
   public remove(element: Element): void {
@@ -59,13 +64,18 @@ export abstract class GraphicSet {
   public addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
     this.elements.forEach((value) => {
       value.addEventListener(type, listener);
-    })
+    });
+
+    this.events.push({type, listener});
   }
 
   public removeEventListener(type: string, listener: EventListenerOrEventListenerObject) {
     this.elements.forEach((value) => {
       value.removeEventListener(type, listener);
     })
+
+    const index = this.events.findIndex((value) => value.type === type && value.listener === listener);
+    this.events.splice(index, 1);
   }
 
   protected abstract setDraggableEvent(element: Element);

@@ -7,7 +7,7 @@ import { SidebarComponent } from './sidebar.component';
 
 import { ElementExplorerModule } from './element-explorer';
 
-import { ProjectExplorerComponent } from './project-explorer';
+import { ProjectExplorerComponent, ProjectModelComponent } from './project-explorer';
 import { ProjectTreeComponent } from './project-explorer/project-tree';
 
 @NgModule({
@@ -23,7 +23,8 @@ import { ProjectTreeComponent } from './project-explorer/project-tree';
   declarations: [
     SidebarComponent,
     ProjectExplorerComponent,
-    ProjectTreeComponent
+    ProjectTreeComponent,
+    ProjectModelComponent
   ],
   providers: [],
 })

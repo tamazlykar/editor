@@ -1,9 +1,10 @@
 :host {
+  z-index: 30;
   width: 100%;
+  display: flex;
 }
 
 #canvas {
-  border: solid 1px black;
-  width: 800px;
-  height: 600px;
+  background-color: #ffffff;
+  width: 100%;
 }

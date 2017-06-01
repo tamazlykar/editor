@@ -1,4 +1,5 @@
-import { Component, Injector } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { ObjectModelService } from '../../../../../shared/services/model-services';
 import { CommentModel, CommentView } from '../../../../../shared/data-model';
 
 @Component({
@@ -6,17 +7,34 @@ import { CommentModel, CommentView } from '../../../../../shared/data-model';
   templateUrl: './comment.component.html'
 })
 export class CommentComponent {
+  public unchangedModel: CommentModel;
   public model: CommentModel;
-  public view: CommentView;
 
-  constructor(private injector: Injector) {
-    // this.element = this.injector.get('element');
-    // this.model = this.element.getModel();
-    // console.log(this.model.isAbstract);
+
+  @ViewChild('autosize') autosize;
+
+  constructor(private modelService: ObjectModelService) {
+    this.modelService.getSelectedModel().subscribe(model => {
+      if (model.elementType === 'Comment') {
+        this.unchangedModel = model as CommentModel;
+        this.model = Object.assign({}, model) as CommentModel;
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.autosize.resizeToFitContent();
   }
 
   public update() {
-    // this.element.draw();
-    // console.log(this.model.isAbstract);
+    this.modelService.update(this.model.$key, this.model);
+  }
+
+  public onTextChanged(value: string) {
+    if (this.unchangedModel.body === value) {
+      return;
+    }
+    this.model.body = value;
+    this.update();
   }
 }

@@ -12,6 +12,8 @@ export class ClassModel extends ObjectModel implements IClass {
   clientDependenciesIds: Array<string>;
   commentIds: Array<string>;
 
+  viewModelIds: Array<string>;
+
   constructor(name: string) {
     super('Class');
     this.attributes = new Array<any>();

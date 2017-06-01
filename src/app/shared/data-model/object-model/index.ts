@@ -6,3 +6,4 @@ export * from './interface.model';
 export * from './feature'
 
 export * from './metamodel/types';
+export * from './types';

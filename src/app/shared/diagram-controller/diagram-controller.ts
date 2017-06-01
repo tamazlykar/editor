@@ -1,5 +1,8 @@
+import { Injectable } from '@angular/core';
 import { Graphics } from '../graphics';
 import { ObjectModelService, ViewModelService } from '../services/model-services';
+import { EventManagerService } from '../event-manager';
+import { ContextMenuService } from '../context-menu';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import {
@@ -18,38 +21,63 @@ import {
   CommentView
 } from '../data-model/view-model';
 
-export class DiagramController {
+
+@Injectable()
+export class DiagramControllerService {
   private graphic: Graphics;
   private objectModelsIds: Array<string>;
   private viewModelsIds: Array<string>;
   private elements: Map<string, ElementPresentationModel>;
   private viewToModelId: Map<string, string>;
+  private selectedModel: any;
+  private selectedView: any;
 
   constructor(
     private modelService: ObjectModelService,
-    private viewService: ViewModelService
+    private viewService: ViewModelService,
+    private eventManager: EventManagerService,
+    private contextMenuService: ContextMenuService
   ) {
     this.elements = new Map<string, ElementPresentationModel>();
     this.viewToModelId = new Map<string, string>();
     this.objectModelsIds = [];
     this.viewModelsIds = [];
 
-    this.modelService.elementsIds$.subscribe(ids => {
+    const self = this;
+
+    this.modelService.getElementIds().subscribe(ids => {
+      if (ids.length < self.objectModelsIds.length) {
+        this.removeDeletedModels(ids, self.objectModelsIds);
+      }
       this.objectModelsIds = ids;
       this.createElements();
     });
 
     this.viewService.elementsIds$.subscribe(ids => {
+      if (ids.length < self.viewModelsIds.length) {
+        this.removeDeletedViews(ids, self.viewModelsIds);
+      }
       this.viewModelsIds = ids;
       this.createElements();
     });
+
+    this.viewService.getSelectedView().subscribe(view => this.selectedView = view);
+    this.modelService.getSelectedModel().subscribe(model => this.selectedModel = model);
   }
 
   public initialize(element: HTMLElement) {
-    this.graphic = new Graphics(element, 800, 600);
+    this.graphic = new Graphics(element, element.clientWidth, element.clientHeight - 4); // TODO: I down know why but without this -4 we will get scrollbar
     element.addEventListener('mousedown', () => {
-      this.modelService.setSelectedModel(null);
-      this.viewService.setSelectedView(null);
+      if (this.selectedView) {
+        this.viewService.setSelectedView(null);
+      }
+      if (this.selectedModel) {
+        this.modelService.setSelectedModel(null);
+      }
+    });
+
+    element.addEventListener('mouseup', (e) => {
+      this.eventManager.canvasAddNewElement(e);
     });
     this.createElements();
   }
@@ -78,27 +106,43 @@ export class DiagramController {
           if (model.elementType === 'Class') { // TODO
             this.setUpdateEvents(model, view);
           }
+          if (model.elementType === 'Interface') {
+            this.setUpdateEvents(model, view);
+          }
+          if (model.elementType === 'Comment') {
+            this.setUpdateEvents(model, view);
+          }
         });
       });
     }
   }
 
   private setUpdateEvents(model: ObjectModel, view: ViewModel) {
-    this.modelService.getElementById(model.$key).subscribe(modelData => {
+    this.modelService.getElementById(model.$key)
+      .takeWhile(data => !!data)
+      .subscribe(modelData => {
       this.elements.get(modelData.$key).updateModel(modelData);
     });
-    this.viewService.getElementById(view.$key).subscribe(viewData => {
+    this.viewService.getElementById(view.$key)
+      .takeWhile(data => !!data)
+      .subscribe(viewData => {
       this.elements.get(viewData.modelId).updateView(viewData);
     });
+
+
   }
 
   private chooseInstanation(model: ObjectModel, view: ViewModel) {
     switch (model.elementType) {
-      // case 'Comment': {
-      //   this.createCommentPresentation(model as CommentModel, view as CommentView);
-      //   break;
-      // }
+      case 'Comment': {
+        this.createCommentPresentation(model as CommentModel, view as CommentView);
+        break;
+      }
       case 'Class': {
+        this.createClassPresentation(model as ClassModel, view as ClassView);
+        break;
+      }
+      case 'Interface': {
         this.createClassPresentation(model as ClassModel, view as ClassView);
         break;
       }
@@ -147,7 +191,45 @@ export class DiagramController {
         this.viewService.setSelectedView(clickInfo.viewId);
       }
     });
+
+    this.setEventManagerEvent(presentationModel, model.$key, view.$key);
+
+    presentationModel.addEventListener('contextmenu', this.contextMenuService.getClassifierCallback(model.$key, view.$key).bind(this.contextMenuService));
   }
 
   private createInterfacePresentation() {}
+
+  private setEventManagerEvent(element: ElementPresentationModel, modelId: string, viewId: string) {
+    element.addEventListener('mouseup', (e) => {
+      this.eventManager.elementAddNewSubelement(e as MouseEvent, modelId, viewId);
+    })
+  }
+
+  private removeDeletedModels(newIds: Array<string>, oldIds: Array<string>) {
+    const deletedIds = this.getDifference(newIds, oldIds);
+    for (const id of deletedIds) {
+      const element = this.elements.get(id);
+      if (!element) {
+        return;
+      }
+      element.remove();
+      this.elements.delete(id);
+    }
+  }
+
+  private removeDeletedViews(newIds: Array<string>, oldIds: Array<string>) {
+    const deletedIds = this.getDifference(newIds, oldIds).map(value => this.viewToModelId.get(value));
+    for (const id of deletedIds) {
+      const element = this.elements.get(id);
+      if (!element) {
+        return;
+      }
+      element.remove();
+      this.elements.delete(id);
+    } // TODO remove also from view2model
+  }
+
+  private getDifference(arr1: Array<any>, arr2: Array<any>) { // elements from arr1 that not exist in arr2
+    return arr2.filter(val => arr1.indexOf(val) < 0);
+  }
 }

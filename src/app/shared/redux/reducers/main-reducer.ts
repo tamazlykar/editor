@@ -61,6 +61,7 @@ export const getDiagramListState = createSelector(getDiagramState, dm.getDiagram
 
 const getModelState = (state: State) => state.model;
 export const getObjectModelIds = createSelector(getModelState, ob.getObjectModelElementsIds);
+export const getObjectModels = createSelector(getModelState, ob.getObjectModelElementsInObject);
 
 const getViewState = (state: State) => state.view;
 export const getViewModelIds = createSelector(getViewState, vm.getViewModelElementsIds);

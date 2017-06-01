@@ -52,19 +52,14 @@ export interface IFeature extends ITypedElement, IRedifinableElement {
   isStatic: boolean;
 }
 
-interface IStructuralFeature extends IFeature {
-}
 
-export interface IProperty extends IStructuralFeature {
+export interface IProperty extends IFeature {
   aggregation: AggregationKind;
 }
 
-interface IBehavioralFeature extends IFeature {
+export interface IOperation extends IFeature {
   parameters: Array<IParameter>;
   isAbstract: boolean;
-}
-
-export interface IOperation extends IBehavioralFeature {
 }
 
 export interface IRelationship extends IElement {
@@ -81,5 +76,13 @@ export interface IDependency extends IDirectedRelationship {
 export interface IRealization extends IDependency {
 }
 
+export interface IGeneralization extends IDirectedRelationship {
+  specificKey: string;
+  generalKey: string;
+}
+
+export interface IAssociation extends IRelationship {
+  memberEnd: Array<IProperty>;
+}
 
 

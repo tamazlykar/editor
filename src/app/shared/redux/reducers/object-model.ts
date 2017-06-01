@@ -59,7 +59,7 @@ function idsReducer(state = idsInitialState, action): Array<string> {
     }
     case ActionTypes.DELETE_OBJECT_MODEL: {
       return state.filter((val: ObjectModel) => {
-        return val.$key !== action.payload;
+        return val !== action.payload;
       });
     }
     default:
@@ -73,3 +73,4 @@ export const reducer = combineReducers({
 });
 
 export const getObjectModelElementsIds = (state: State) => state.ids;
+export const getObjectModelElementsInObject = (state: State) => state.elements;

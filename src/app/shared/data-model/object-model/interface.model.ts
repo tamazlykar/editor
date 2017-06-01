@@ -11,8 +11,10 @@ export class InterfaceModel extends ObjectModel implements IInterface {
   clientDependenciesIds: Array<string>;
   commentIds: Array<string>;
 
-  constructor(name: string, isAbstract: boolean, visibility: VisibilityKind) {
-    super('Class');
+  viewModelIds: Array<string>;
+
+  constructor(name: string) {
+    super('Interface');
     this.attributes = new Array<any>();
     this.operations = new Array<any>();
     this.supplierDependenciesIds = new Array<string>();
@@ -20,7 +22,7 @@ export class InterfaceModel extends ObjectModel implements IInterface {
     this.commentIds = new Array<string>();
 
     this.name = name;
-    this.isAbstract = isAbstract;
-    this.visibility = visibility;
+    this.isAbstract = false;
+    this.visibility = VisibilityKind.public;
   }
 }

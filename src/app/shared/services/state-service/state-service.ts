@@ -35,7 +35,7 @@ export class StateService {
   }
 
   setSelectedElement(modelId: string, viewId: string) {
-    this.store.dispatch(new app.SetModelElementAction(modelId));
+    this.store.dispatch(new app.SetModelElementAction({modelId, submodelId: null}));
     this.store.dispatch(new app.SetViewElementAction(viewId));
   }
 }

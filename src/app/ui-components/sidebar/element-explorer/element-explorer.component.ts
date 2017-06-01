@@ -61,6 +61,13 @@ export class ElementExplorerComponent {
         };
         break;
       }
+      case 'Comment': {
+        this.componentData = {
+          component: CommentComponent,
+          inputs: {}
+        };
+        break;
+      }
       default: {
         this.componentData = {
           component: StubComponent,

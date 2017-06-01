@@ -1,11 +1,55 @@
 <md-list>
   <md-list-item
-    (click)="createClass()"
+    (mousedown)="createElement($event, 'Class')"
   >Класс</md-list-item>
+
   <md-list-item
-    (click)="createCommnet()"
+    (mousedown)="createElement($event, 'Interface')"
+  >Интерфейс</md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Property')"
+  >Атрибут</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Операция</md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Ассоциация</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Агрегация</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Зависимость</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Композиция</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Обобщение</md-list-item>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Operation')"
+  >Реализация</md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-list-item
+    (mousedown)="createElement($event, 'Comment')"
   >Комментарий</md-list-item>
+
   <md-list-item
     (mousedown)="onMouseDown($event, {})"
-  > Paprika </md-list-item>
+  >Связь комментария</md-list-item>
 </md-list>

@@ -1,24 +1,30 @@
 import { Graphics, Rectangle, Text, TextAnchor, Element, FontWeight, FontStyle } from '../../../../graphics';
-import { ClassModel, InterfaceModel } from '../../../../data-model/object-model';
+import { ClassModel, InterfaceModel, ElementType } from '../../../../data-model/object-model';
 import { ClassView, InterfaceView } from '../../../../data-model/view-model';
 import { CompartmentSize } from './types';
 
 export class NameCompartment {
   private static padding = {
-    top: 5,
+    top: 10, // TODO: fix it to 5 and try to get equal top and bottom paddings
     left: 10,
     right: 10,
-    bottom: 5
+    bottom: 5,
+    between: 2
   };
+  private type: ElementType;
   private graphics: Graphics;
   private rect: Rectangle;
   private name: Text;
+  private interfaceText: Text;
   private model: ClassModel | InterfaceModel;
   private view: ClassView | InterfaceView;
 
+  private fontSize = 16;
 
-  constructor(graphics: Graphics) {
+
+  constructor(graphics: Graphics, type: ElementType) {
     this.graphics = graphics;
+    this.type = type;
   }
 
   public build(model: ClassModel | InterfaceModel, view: ClassView | InterfaceView): CompartmentSize {
@@ -44,17 +50,34 @@ export class NameCompartment {
 
     // TODO style
 
+    let interfaceHeight = 0;
+    let interfaceWidth = 0;
+    // create interface
+    if (this.type === ElementType.interface) {
+      this.interfaceText = this.graphics.text(view.x + width / 2, NameCompartment.padding.top + view.y, '«interface»');
+      this.interfaceText.fontSize = this.fontSize;
+      this.interfaceText.textAnchor = TextAnchor.middle;
+
+      this.setModelAndViewIds(this.interfaceText, model.$key, view.$key);
+
+      const bBox = this.interfaceText.getBBox();
+      interfaceHeight = bBox.height + NameCompartment.padding.between;
+      interfaceWidth = bBox.width;
+    }
     // create name
-    this.name = this.graphics.text(view.x + width / 2, NameCompartment.padding.top + view.y, model.name);
+    this.name = this.graphics.text(view.x + width / 2, NameCompartment.padding.top + view.y + interfaceHeight, model.name);
+    this.name.fontSize = this.fontSize;
     this.name.textAnchor = TextAnchor.middle;
     this.name.fontWeight = FontWeight.bold;
     this.name.fontStyle = model.isAbstract ? FontStyle.italic : FontStyle.normal;
+
+
 
     const bBox = this.name.getBBox();
 
     // update border coz now we know height
     if (!isLastCompartment) {
-      height = NameCompartment.padding.top + bBox.height + NameCompartment.padding.bottom;
+      height = NameCompartment.padding.top + interfaceHeight + bBox.height + NameCompartment.padding.bottom;
       this.rect.height = height;
     }
 
@@ -106,12 +129,18 @@ export class NameCompartment {
       const dx = view.x - oldView.x;
       this.rect.x += dx;
       this.name.x += dx;
+      if (this.type === ElementType.interface) {
+        this.interfaceText.x += dx;
+      }
     }
 
     if (view.y !== oldView.y) {
       const dy = view.y - oldView.y;
       this.rect.y += dy;
       this.name.y += dy;
+      if (this.type === ElementType.interface) {
+        this.interfaceText.y += dy;
+      }
     }
 
     if (isLastCompartment) {
@@ -123,13 +152,21 @@ export class NameCompartment {
     if (view.width !== oldView.width) {
       this.rect.width = view.width;
       this.name.x = view.x + view.width / 2;
+      if (this.type === ElementType.interface) {
+        this.interfaceText.x = view.x + view.width / 2;
+      }
     }
 
     return this.getCompartmentSize();
   }
 
   public getGraphicElements(): Array<Element> {
-    return [this.rect, this.name];
+    if (this.type === ElementType.interface) {
+      return [this.rect, this.name, this.interfaceText];
+    } else {
+      return [this.rect, this.name];
+    }
+
   }
 
   private setModelAndViewIds(element: Element, modelId: string, viewId: string) {
@@ -140,12 +177,18 @@ export class NameCompartment {
   private getCompartmentSize(): CompartmentSize {
     const nameBBox = this.name.getBBox();
     const rectBBox = this.rect.getBBox();
+    let interfaceBBox = {width: 0, height: 0};
+    if (this.type === ElementType.interface) {
+      interfaceBBox = this.interfaceText.getBBox();
+      interfaceBBox.height += NameCompartment.padding.between;
+    }
 
     const nameWidth = NameCompartment.padding.left + nameBBox.width + NameCompartment.padding.right;
-    const nameHeight = NameCompartment.padding.top + nameBBox.height + NameCompartment.padding.bottom;
+    const nameHeight = NameCompartment.padding.top + nameBBox.height + interfaceBBox.height + NameCompartment.padding.bottom;
+    const interfaceWidth = NameCompartment.padding.left + interfaceBBox.width + NameCompartment.padding.right;
 
     return {
-      width: Math.max(nameWidth, rectBBox.width),
+      width: Math.max(nameWidth, rectBBox.width, interfaceWidth),
       height: Math.max(nameHeight, rectBBox.height)
     };
   }
@@ -156,6 +199,11 @@ export class NameCompartment {
 
   private getTextBlockHeight() {
     const bBox = this.name.getBBox();
-    return NameCompartment.padding.top + bBox.height + NameCompartment.padding.bottom;
+    let interfaceBBox = {width: 0, height: 0};
+    if (this.type === ElementType.interface) {
+      interfaceBBox = this.interfaceText.getBBox();
+      interfaceBBox.height += NameCompartment.padding.between;
+    }
+    return NameCompartment.padding.top + interfaceBBox.height + bBox.height + NameCompartment.padding.bottom;
   }
 }

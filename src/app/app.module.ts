@@ -10,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { appReducer } from './shared/redux/reducers';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { SidebarModule } from './ui-components/sidebar';
+import { ContextMenuModule } from './shared/context-menu';
 
 import { AppComponent } from './app.component';
 import { DevelopViewComponent } from './ui-components/develop-view/develop-view.component';
@@ -20,7 +21,8 @@ import { InstrumentalPanelComponent } from './ui-components/instrumental-panel';
 
 import { AuthService, FirebaseAuthService } from './shared/services/auth-service';
 
-import { DragManagerService } from './shared/services/drag-manager-service';
+import { EventManagerService } from './shared/event-manager';
+import { DiagramControllerService } from './shared/diagram-controller';
 
 import {
   ProjectDataService,
@@ -34,6 +36,11 @@ import {
   ObjectModelService,
   ViewModelService
 } from './shared/services/model-services';
+import { ElementService } from './shared/services/element-service/element-service';
+import { ElementNameService } from './shared/services/element-service/element-name.service';
+import { ContextMenuService } from './shared/context-menu';
+
+import { DeleteDialogComponent } from './ui-components/delete-dialog';
 
 
 const firebaseConfig = {
@@ -56,7 +63,8 @@ const firebaseAuthConfig = {
     DevelopViewComponent,
     ToolbarComponent,
     SidenavComponent,
-    InstrumentalPanelComponent
+    InstrumentalPanelComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -65,10 +73,12 @@ const firebaseAuthConfig = {
     AppRoutingModule,
     MaterialModule,
     SidebarModule,
+    ContextMenuModule,
     StoreModule.provideStore(appReducer),
     AngularFireModule.initializeApp(firebaseConfig, firebaseAuthConfig)
   ],
   providers: [
+    ElementNameService,
     ProjectDataService,
     DiagramDataService,
     ObjectModelDataService,
@@ -78,7 +88,13 @@ const firebaseAuthConfig = {
     ObjectModelService,
     ViewModelService,
     { provide: AuthService, useClass: FirebaseAuthService },
-    DragManagerService
+    EventManagerService,
+    DiagramControllerService,
+    ElementService,
+    ContextMenuService
+  ],
+  entryComponents: [
+    DeleteDialogComponent
   ],
   bootstrap: [AppComponent]
 })

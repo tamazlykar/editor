@@ -61,9 +61,9 @@ export class OperationModel extends ObjectModel implements IOperation {
     this.typeId = null;
     this.typeName = null;
     this.isStatic = false;
+    this.isAbstract = false;
     this.isLeaf = false;
     this.commentIds = [];
     this.parameters = [];
-    this.isAbstract = false;
   }
 }

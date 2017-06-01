@@ -11,14 +11,14 @@ export const getEditElementCallback = function(paper: RaphaelPaper, updateSource
   }
 
   function getDots(bBox: BoundingBox): Array<RaphaelElement> {
-    const d1 = paper.circle(bBox.x, bBox.y, radius).attr({cursor: 'nwse-resize', fill: 'black'}).data('dot_number', 1);
-    const d2 = paper.circle(bBox.x + bBox.width / 2, bBox.y, radius).attr({cursor: 'ns-resize', fill: 'black'}).data('dot_number', 2);
-    const d3 = paper.circle(bBox.x2, bBox.y, radius).attr({cursor: 'nesw-resize', fill: 'black'}).data('dot_number', 3);
-    const d4 = paper.circle(bBox.x2, bBox.y + bBox.height / 2, radius).attr({cursor: 'ew-resize', fill: 'black'}).data('dot_number', 4);
-    const d5 = paper.circle(bBox.x2, bBox.y2, radius).attr({cursor: 'nwse-resize', fill: 'black'}).data('dot_number', 5);
-    const d6 = paper.circle(bBox.x + bBox.width / 2, bBox.y2, radius).attr({cursor: 'ns-resize', fill: 'black'}).data('dot_number', 6);
-    const d7 = paper.circle(bBox.x, bBox.y2, radius).attr({cursor: 'nesw-resize', fill: 'black'}).data('dot_number', 7);
-    const d8 = paper.circle(bBox.x, bBox.y + bBox.height / 2, radius).attr({cursor: 'ew-resize', fill: 'black'}).data('dot_number', 8);
+    const d1 = paper.circle(bBox.x, bBox.y, radius).attr({cursor: 'nwse-resize', fill: '#fc0'}).data('dot_number', 1);
+    const d2 = paper.circle(bBox.x + bBox.width / 2, bBox.y, radius).attr({cursor: 'ns-resize', fill: '#fc0'}).data('dot_number', 2);
+    const d3 = paper.circle(bBox.x2, bBox.y, radius).attr({cursor: 'nesw-resize', fill: '#fc0'}).data('dot_number', 3);
+    const d4 = paper.circle(bBox.x2, bBox.y + bBox.height / 2, radius).attr({cursor: 'ew-resize', fill: '#fc0'}).data('dot_number', 4);
+    const d5 = paper.circle(bBox.x2, bBox.y2, radius).attr({cursor: 'nwse-resize', fill: '#fc0'}).data('dot_number', 5);
+    const d6 = paper.circle(bBox.x + bBox.width / 2, bBox.y2, radius).attr({cursor: 'ns-resize', fill: '#fc0'}).data('dot_number', 6);
+    const d7 = paper.circle(bBox.x, bBox.y2, radius).attr({cursor: 'nesw-resize', fill: '#fc0'}).data('dot_number', 7);
+    const d8 = paper.circle(bBox.x, bBox.y + bBox.height / 2, radius).attr({cursor: 'ew-resize', fill: '#fc0'}).data('dot_number', 8);
 
     return [d1, d2, d3, d4, d5, d6, d7, d8];
   }

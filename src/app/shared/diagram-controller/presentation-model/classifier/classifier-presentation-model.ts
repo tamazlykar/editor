@@ -7,6 +7,7 @@ import {
 } from './compartments';
 import { ClassModel, InterfaceModel } from '../../../data-model/object-model';
 import { ClassView, InterfaceView } from '../../../data-model/view-model';
+import { ElementType } from '../../../data-model';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -18,7 +19,6 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
   protected attributeCompartment: AttributeCompartment;
   protected operationCompartment: OperationCompartment;
   protected graphics: Graphics;
-  protected graphicSet: GraphicSet;
   protected view: ClassView | InterfaceView;
 
   constructor(graphics: Graphics, model: ClassModel | InterfaceModel, view: ClassView | InterfaceView) {
@@ -34,7 +34,7 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
     this.view = view;
 
     // name compartment
-    this.nameCompartment = new NameCompartment(this.graphics);
+    this.nameCompartment = new NameCompartment(this.graphics, model.elementType as ElementType);
     const nameSizes = this.nameCompartment.build(model, view);
 
     // attribute compartment
@@ -98,6 +98,13 @@ export abstract class ClassifierPresentationModel extends ElementPresentationMod
         height: Math.max(this.view.height, height)
       };
       this.sendViewUpdate(updateInfo);
+    }
+  }
+
+  public remove() {
+    const elements = this.getElementsFromCompartments();
+    for (const el of elements) {
+      el.remove();
     }
   }
 

@@ -5,11 +5,11 @@ import { CompartmentSize } from './types';
 
 export class OperationCompartment {
   private static padding = {
-    top: 5,
+    top: 8,
     left: 10,
     right: 10,
     bottom: 5,
-    between: 5
+    between: 2
   };
   private graphics: Graphics;
   private rect: Rectangle;
@@ -17,13 +17,15 @@ export class OperationCompartment {
   private model: ClassModel | InterfaceModel;
   private view: ClassView | InterfaceView;
 
+  private fontSize = 14;
+
   constructor(graphics: Graphics) {
     this.graphics = graphics;
     this.operations = new Array<Text>();
   }
 
   public build(model: ClassModel | InterfaceModel, view: ClassView | InterfaceView, heightOffset: number): CompartmentSize {
-    this.model = model
+    this.model = model;
     this.view = view;
 
     const width = view.width;
@@ -44,6 +46,7 @@ export class OperationCompartment {
     for (let i = 0; i < visibleOperations.length; i++) {
       const text = this.graphics.text(view.x + OperationCompartment.padding.left, view.y + heightOffset + textBlockHeight,
         OperationModel.toString(visibleOperations[i]));
+      text.fontSize = this.fontSize;
       this.setData(text, model.$key, view.$key, visibleOperations[i].id);
       this.setOperationModel(text, visibleOperations[i]);
       this.operations.push(text);
@@ -114,52 +117,66 @@ export class OperationCompartment {
       this.rect.height = view.height - heightOffset;
     }
 
-    if (isCompartmentAdded || isCompartmentRemoved ||view.operations && oldView.operations) {
-      if (isCompartmentAdded || view.operations.length > oldView.operations.length) {
-        const operId = view.operations[view.operations.length - 1];
-        let textBlockHeight = this.getTextBlockSize().height;
-        if (textBlockHeight === 0) {
-          textBlockHeight += OperationCompartment.padding.top;
-        } else {
-          textBlockHeight -= OperationCompartment.padding.bottom;
-        }
-        const x = view.x + OperationCompartment.padding.left;
-        const y = view.y + heightOffset + textBlockHeight + OperationCompartment.padding.between;
-        let model: OperationModel;
-        for (let i = 0; i < this.model.operations.length; i++) {
-          if (this.model.operations[i].id === operId) {
-            model = this.model.operations[i];
-            break;
-          }
-        }
-
-        // TODO can be a function
-        const newOper = this.graphics.text(x, y, OperationModel.toString(model));
-        this.setData(newOper, this.model.$key, this.view.$key, model.id);
-        this.setOperationModel(newOper, model);
-        this.operations.push(newOper);
-
-        textBlockHeight += newOper.getBBox().height + OperationCompartment.padding.between + OperationCompartment.padding.bottom;
-
-        this.rect.height = Math.max(textBlockHeight, view.height - heightOffset);
+    const addOperation = () => {
+      const operId = view.operations[view.operations.length - 1];
+      let textBlockHeight = this.getTextBlockSize().height;
+      if (textBlockHeight === 0) {
+        textBlockHeight += OperationCompartment.padding.top;
+      } else {
+        textBlockHeight -= OperationCompartment.padding.bottom;
       }
-      else if (isCompartmentRemoved || view.operations.length < oldView.operations.length) {
-        const visibleOperations = this.getVisibleOperations(this.model.operations, view.operations);
-
-        const deletedElement = this.operations.pop();
-        deletedElement.remove();
-
-        if (visibleOperations.length !== this.operations.length) {
-          throw Error('ErrorRemoveOperation');
+      const x = view.x + OperationCompartment.padding.left;
+      const y = view.y + heightOffset + textBlockHeight + OperationCompartment.padding.between;
+      let model: OperationModel;
+      for (let i = 0; i < this.model.operations.length; i++) {
+        if (this.model.operations[i].id === operId) {
+          model = this.model.operations[i];
+          break;
         }
+      }
 
-        for (let i = 0; i < visibleOperations.length; i++) {
-          this.setOperationModel(this.operations[i], visibleOperations[i]);
-        }
+      // TODO can be a function
+      const newOper = this.graphics.text(x, y, OperationModel.toString(model));
+      newOper.fontSize = this.fontSize;
+      this.setData(newOper, this.model.$key, this.view.$key, model.id);
+      this.setOperationModel(newOper, model);
+      this.operations.push(newOper);
 
-        if (isCompartmentRemoved) {
-          this.rect.height = 0;
-        }
+      textBlockHeight += newOper.getBBox().height + OperationCompartment.padding.between + OperationCompartment.padding.bottom;
+
+      this.rect.height = Math.max(textBlockHeight, view.height - heightOffset);
+    }
+    const removeOperation =() => {
+      const visibleOperations = this.getVisibleOperations(this.model.operations, view.operations);
+
+      const deletedElement = this.operations.pop();
+      deletedElement.remove();
+
+      if (visibleOperations.length !== this.operations.length) {
+        throw Error('ErrorRemoveOperation');
+      }
+
+      for (let i = 0; i < visibleOperations.length; i++) {
+        this.setOperationModel(this.operations[i], visibleOperations[i]);
+      }
+
+      if (isCompartmentRemoved) {
+        this.rect.height = 0;
+      }
+    }
+
+    if (isCompartmentAdded) {
+      addOperation();
+    } else if (isCompartmentRemoved) {
+      removeOperation();
+    }
+
+    if (view.operations && oldView.operations) {
+      if (view.operations.length > oldView.operations.length) {
+        addOperation();
+      }
+      else if (view.operations.length < oldView.operations.length) {
+        removeOperation();
       }
     }
 
@@ -243,11 +260,11 @@ export class OperationCompartment {
   }
 
   private isCompartmentAdded(oldView: ClassView | InterfaceView, newView: ClassView | InterfaceView) {
-    return oldView.operations && !newView.operations ? true : false;
+    return !oldView.operations && newView.operations ? true : false;
   }
 
   private isCompartmentRemoved(oldView: ClassView | InterfaceView, newView: ClassView | InterfaceView) {
-    return !oldView.operations && newView.operations ? true : false;
+    return oldView.operations && !newView.operations ? true : false;
   }
 
   private setData(element: Element, modelId: string, viewId: string, submodelId: string) {

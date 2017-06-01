@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     private diagramService: DiagramService
   ) {
     this.autoselect();
-    // this.printStore();
+    this.printStore();
   }
 
   public ngOnInit() {
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
 
 
   public printStore() {
-    this.store.subscribe(a => {console.log('Store:', a)});
+    this.store.distinctUntilChanged().subscribe(a => {console.log('Store:', a)});
   }
 
   public autoselect() {

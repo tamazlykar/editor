@@ -1,0 +1,14 @@
+<md-card>
+  <md-card-title>Комментарий</md-card-title>
+  <md-input-container style="width: 100%;">
+    <textarea
+      mdInput
+      mdTextareaAutosize
+      #autosize="mdTextareaAutosize"
+      [value]="model.body"
+      [mdAutosizeMaxRows]="5"
+      (keyup.enter)="onTextChanged(autosize.value)"
+      (blur)="onTextChanged(autosize.value)"
+    ></textarea>
+  </md-input-container>
+</md-card>

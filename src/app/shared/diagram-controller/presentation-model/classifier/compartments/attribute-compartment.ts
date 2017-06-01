@@ -5,17 +5,19 @@ import { CompartmentSize } from './types';
 
 export class AttributeCompartment {
   private static padding = {
-    top: 5,
+    top: 8,
     left: 10,
     right: 10,
     bottom: 5,
-    between: 5
+    between: 2
   };
   private graphics: Graphics;
   private rect: Rectangle;
   private attributes: Array<Text>;
   private model: ClassModel | InterfaceModel;
   private view: ClassView | InterfaceView;
+
+  private fontSize = 14;
 
   constructor(graphics: Graphics) {
     this.graphics = graphics;
@@ -57,6 +59,7 @@ export class AttributeCompartment {
     for (let i = 0; i < n; i++) {
       const text = this.graphics.text(view.x + AttributeCompartment.padding.left, view.y + heightOffset + textBlockHeight,
         PropertyModel.toString(visibleAttributes[i]));
+      text.fontSize = this.fontSize;
       this.setData(text, model.$key, view.$key, visibleAttributes[i].id);
       this.setAttributeModel(text, visibleAttributes[i]);
       this.attributes.push(text);
@@ -140,6 +143,8 @@ export class AttributeCompartment {
     if (view.attributes && oldView.attributes && view.attributes.length < oldView.attributes.length) { // attr removed
       const existAttributes = this.getVisibleAttributes(this.model.attributes, view.attributes);
       this.removeAttribute(existAttributes);
+
+      this.rect.height = this.getTextBlockSize().height;
     }
 
     if (!view.attributes) {
@@ -165,7 +170,7 @@ export class AttributeCompartment {
         textBlockHeight -= AttributeCompartment.padding.bottom;
       }
       const x = view.x + AttributeCompartment.padding.left;
-      const y = view.y + heightOffset + textBlockHeight - AttributeCompartment.padding.bottom + AttributeCompartment.padding.between;
+      const y = view.y + heightOffset + textBlockHeight + AttributeCompartment.padding.between;
       let model: PropertyModel;
       for (let i = 0; i < this.model.attributes.length; i++) {
         if (this.model.attributes[i].id === attrId) {
@@ -174,11 +179,12 @@ export class AttributeCompartment {
         }
       }
       const newAttr = this.addAttribute(x, y, model); // TODO data
+      newAttr.fontSize = this.fontSize;
       this.setData(newAttr, this.model.$key, this.view.$key, model.id);
       const bBox = newAttr.getBBox();
 
       if (!isLastCompartment) {
-        this.rect.height = textBlockHeight + AttributeCompartment.padding.between + bBox.height;
+        this.rect.height = textBlockHeight + AttributeCompartment.padding.between + bBox.height + AttributeCompartment.padding.bottom;
       }
     }
 

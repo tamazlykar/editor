@@ -1,0 +1,11 @@
+<div [ngStyle]="locationCss" class="container">
+  <ul>
+    <li
+      *ngFor="let link of links"
+      (click)="link.action()"
+      class="link"
+    >
+      {{ link.title }}
+    </li>
+  </ul>
+</div>

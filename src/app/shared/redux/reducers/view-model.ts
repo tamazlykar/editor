@@ -59,7 +59,7 @@ function idsReducer(state = idsInitialState, action): Array<string> {
     }
     case ActionTypes.DELETE_VIEW_MODEL: {
       return state.filter((val: ViewModel) => {
-        return val.$key !== action.payload;
+        return val !== action.payload;
       });
     }
     default:

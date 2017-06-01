@@ -1,18 +1,18 @@
-<md-sidenav-container>
+<uml-context-menu-holder></uml-context-menu-holder>
+<md-sidenav-container fullscreen>
   <md-sidenav>
     <uml-sidenav></uml-sidenav>
   </md-sidenav>
 
   <!-- primary content -->
-  <uml-toolbar></uml-toolbar>
+  <div class="wrapper">
+    <uml-toolbar></uml-toolbar>
 
-  <div class="editor">
-    <uml-instrumental-panel></uml-instrumental-panel>
-    <router-outlet></router-outlet>
-    <uml-sidebar></uml-sidebar>
+    <div class="editor">
+      <uml-instrumental-panel></uml-instrumental-panel>
+      <router-outlet></router-outlet>
+      <uml-sidebar></uml-sidebar>
+    </div>
   </div>
 
 </md-sidenav-container>
-
-
-
