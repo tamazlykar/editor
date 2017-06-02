@@ -8,17 +8,20 @@ import 'rxjs/add/observable/combineLatest';
 import {
   ElementPresentationModel,
   ClassPresentationModel,
-  CommentPresentationModel
+  CommentPresentationModel,
+  InterfacePresentationModel
 } from './presentation-model';
 import {
   ObjectModel,
   ClassModel,
-  CommentModel
+  CommentModel,
+  InterfaceModel
 } from '../data-model/object-model';
 import {
   ViewModel,
   ClassView,
-  CommentView
+  CommentView,
+  InterfaceView
 } from '../data-model/view-model';
 
 
@@ -143,7 +146,7 @@ export class DiagramControllerService {
         break;
       }
       case 'Interface': {
-        this.createClassPresentation(model as ClassModel, view as ClassView);
+        this.createInterfacePresentation(model as ClassModel, view as ClassView);
         break;
       }
     }
@@ -197,7 +200,25 @@ export class DiagramControllerService {
     presentationModel.addEventListener('contextmenu', this.contextMenuService.getClassifierCallback(model.$key, view.$key).bind(this.contextMenuService));
   }
 
-  private createInterfacePresentation() {}
+  private createInterfacePresentation(model: InterfaceModel, view: InterfaceView) {
+    const presentationModel = new InterfacePresentationModel(this.graphic, model, view);
+    this.elements.set(model.$key, presentationModel);
+    presentationModel.updateStream$.subscribe(updatedView => {
+      if (updatedView) {
+        this.viewService.update(updatedView.$key, updatedView);
+      }
+    });
+    presentationModel.clickStream$.subscribe(clickInfo => {
+      if (clickInfo) {
+        this.modelService.setSelectedModel(clickInfo.modelId, clickInfo.submodelId);
+        this.viewService.setSelectedView(clickInfo.viewId);
+      }
+    });
+
+    this.setEventManagerEvent(presentationModel, model.$key, view.$key);
+
+    presentationModel.addEventListener('contextmenu', this.contextMenuService.getClassifierCallback(model.$key, view.$key).bind(this.contextMenuService));
+  }
 
   private setEventManagerEvent(element: ElementPresentationModel, modelId: string, viewId: string) {
     element.addEventListener('mouseup', (e) => {

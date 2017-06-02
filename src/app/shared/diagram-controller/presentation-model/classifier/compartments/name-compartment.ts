@@ -179,7 +179,7 @@ export class NameCompartment {
     const rectBBox = this.rect.getBBox();
     let interfaceBBox = {width: 0, height: 0};
     if (this.type === ElementType.interface) {
-      interfaceBBox = this.interfaceText.getBBox();
+      interfaceBBox = Object.assign({}, this.interfaceText.getBBox());
       interfaceBBox.height += NameCompartment.padding.between;
     }
 
@@ -201,7 +201,7 @@ export class NameCompartment {
     const bBox = this.name.getBBox();
     let interfaceBBox = {width: 0, height: 0};
     if (this.type === ElementType.interface) {
-      interfaceBBox = this.interfaceText.getBBox();
+      interfaceBBox = Object.assign({}, this.interfaceText.getBBox());
       interfaceBBox.height += NameCompartment.padding.between;
     }
     return NameCompartment.padding.top + interfaceBBox.height + bBox.height + NameCompartment.padding.bottom;
