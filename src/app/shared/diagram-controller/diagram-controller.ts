@@ -66,7 +66,7 @@ export class DiagramControllerService {
   }
 
   public initialize(element: HTMLElement) {
-    this.graphic = new Graphics(element, element.clientWidth, element.clientHeight - 4); // TODO: I down know why but without this -4 we will get scrollbar
+    this.graphic = new Graphics(element, element.clientWidth, element.clientHeight - 4);
     element.addEventListener('mousedown', () => {
       if (this.selectedView) {
         this.viewService.setSelectedView(null);
@@ -231,5 +231,9 @@ export class DiagramControllerService {
 
   private getDifference(arr1: Array<any>, arr2: Array<any>) { // elements from arr1 that not exist in arr2
     return arr2.filter(val => arr1.indexOf(val) < 0);
+  }
+
+  get graphics() {
+    return this.graphic;
   }
 }

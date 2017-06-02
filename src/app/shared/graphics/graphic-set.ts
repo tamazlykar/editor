@@ -2,7 +2,6 @@ import { Element, Text } from './elements';
 import { RaphaelText } from './raphael/raphael-text';
 import { Subject } from 'rxjs/Subject';
 import { UpdateInfo, ClickInfo } from './types';
-import {element} from "protractor";
 
 export abstract class GraphicSet {
   protected elements: Array<Element>;

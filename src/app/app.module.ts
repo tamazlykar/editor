@@ -39,8 +39,11 @@ import {
 import { ElementService } from './shared/services/element-service/element-service';
 import { ElementNameService } from './shared/services/element-service/element-name.service';
 import { ContextMenuService } from './shared/context-menu';
+import { ExportService, RaphaelExportService } from './shared/export';
 
 import { DeleteDialogComponent } from './ui-components/delete-dialog';
+import { ExportDialogComponent } from './ui-components/export-dialog';
+
 
 
 const firebaseConfig = {
@@ -64,7 +67,8 @@ const firebaseAuthConfig = {
     ToolbarComponent,
     SidenavComponent,
     InstrumentalPanelComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    ExportDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -91,10 +95,12 @@ const firebaseAuthConfig = {
     EventManagerService,
     DiagramControllerService,
     ElementService,
-    ContextMenuService
+    ContextMenuService,
+    { provide: ExportService, useClass: RaphaelExportService },
   ],
   entryComponents: [
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    ExportDialogComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -40,9 +40,10 @@ export class AppComponent implements OnInit {
     this.store.select(getSidenavState)
       .subscribe((state: boolean) => {
         if (!state) {
-          return;
+          this.close();
+        } else {
+          this.open();
         }
-        this.open();
       });
 
     this.mdSidenavComponent.onClose
@@ -53,6 +54,10 @@ export class AppComponent implements OnInit {
 
   private open() {
     this.mdSidenavComponent.open();
+  }
+
+  private close() {
+    this.mdSidenavComponent.close();
   }
 
 

@@ -5,7 +5,14 @@ import { getObjectModelById } from '../../redux/selectors';
 import * as app from '../../redux/actions/app';
 import { ObjectModelDataService } from '../data-services';
 
-import { ObjectModel, ElementType } from '../../data-model';
+import {
+  ObjectModel,
+  ElementType,
+  ClassModel,
+  InterfaceModel,
+  PropertyModel,
+  OperationModel
+} from '../../data-model';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/let';
@@ -26,7 +33,7 @@ export class ObjectModelService {
   }
 
   public add(element: ObjectModel): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.dataService.add(element)
         .then(key => resolve(key));
     });

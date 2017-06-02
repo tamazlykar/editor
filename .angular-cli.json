@@ -22,7 +22,11 @@
         "styles.css"
       ],
       "scripts": [
-        "../node_modules/raphael/raphael.min.js"
+        "../node_modules/raphael/raphael.min.js",
+        "assets/raphael-export/raphael-export.js",
+        "assets/canvg/rgbcolor.js",
+        "assets/canvg/StackBlur.js",
+        "assets/canvg/canvg.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
